@@ -10,24 +10,15 @@ export default function Signup() {
 
   return (
     <div className="min-h-[100dvh] grid lg:grid-cols-[1.05fr_0.95fr]" style={{ background: "transparent", color: "var(--foreground)" }}>
-      <div className="relative overflow-hidden hidden lg:block border-r" style={{ borderColor: "var(--border)" }}>
+      <div
+        className="relative hidden lg:flex items-center justify-center p-8 xl:p-10 border-r"
+        style={{ borderColor: "var(--border)", background: "var(--background)" }}
+      >
         <img
           src={poster}
           alt="Elestar editorial poster with halftone eye illustration and brand tagline about work and what you look at"
-          className="absolute inset-0 w-full h-full object-cover object-[center_42%]"
+          className="max-h-full max-w-full w-auto h-auto object-contain"
         />
-        <div
-          className="absolute inset-x-0 top-0 h-[120px] pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, color-mix(in srgb, var(--background) 55%, transparent), transparent)" }}
-        />
-        <div className="absolute top-[34px] left-[34px] z-10">
-          <Logo size="lg" />
-        </div>
-        <div className="absolute left-[34px] bottom-[34px] z-10">
-          <p className="font-mono text-[10.5px] uppercase tracking-[0.14em]" style={{ color: "var(--navy)" }}>
-            Demo only. Nothing is stored.
-          </p>
-        </div>
       </div>
 
       <div className="flex items-center justify-center p-8 md:p-10">
