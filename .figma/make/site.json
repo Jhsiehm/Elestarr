@@ -1,5 +1,6 @@
 {
-  "description": "Browse and match with designer portfolios using Pinterest-style scrolling or swipe to find candidates by skills, aesthetics, and interview history for hiring.",
+  "title": "Elestarr",
+  "description": "Find people by what they make. Work first, verified Signals attached.",
   "robots": {
     "index": false
   },
