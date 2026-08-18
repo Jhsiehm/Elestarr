@@ -1,0 +1,10 @@
+{
+  "description": "Browse and match with designer portfolios using Pinterest-style scrolling or swipe to find candidates by skills, aesthetics, and interview history for hiring.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
