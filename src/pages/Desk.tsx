@@ -39,7 +39,7 @@ function HiringDesk() {
       <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 items-end mb-10">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] mb-3" style={{ color: "var(--navy)" }}>Desk · Hiring</p>
-          <h1 className="font-display leading-none" style={{ fontSize: "clamp(32px, 5vw, 52px)", letterSpacing: "-0.035em", color: "var(--navy)" }}>
+          <h1 className="font-display font-extralight leading-none" style={{ fontSize: "clamp(2.6rem, 6.5vw, 4.8rem)", letterSpacing: "-0.045em", color: "var(--navy)" }}>
             A role in sentences.
           </h1>
         </div>
@@ -102,7 +102,7 @@ function HiringDesk() {
                     <img src={c.avatar} alt="" className="w-11 h-11 object-cover flex-none" />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline justify-between gap-3">
-                        <p className="font-display text-[18px] leading-none" style={{ color: "var(--navy)" }}>{c.name}</p>
+                        <p className="font-display font-normal text-[18px] leading-none" style={{ color: "var(--navy)" }}>{c.name}</p>
                         <FitMark n={m.fit} />
                       </div>
                       <p className="font-mono text-[10px] uppercase tracking-[0.1em] mt-1.5" style={{ color: "var(--muted-foreground)" }}>
@@ -125,7 +125,7 @@ function HiringDesk() {
                 <p className="font-mono text-[10px] uppercase tracking-[0.2em] mb-6" style={{ color: "var(--ink-3)" }}>
                   Interview brief · after approval
                 </p>
-                <h2 className="font-display text-[28px] md:text-[32px] leading-none mb-2" style={{ color: "var(--navy)" }}>{person.name}</h2>
+                <h2 className="font-display font-normal text-[28px] md:text-[32px] leading-none mb-2" style={{ color: "var(--navy)", letterSpacing: "-0.03em" }}>{person.name}</h2>
                 <p className="font-mono text-[11px] uppercase tracking-[0.12em] mb-8" style={{ color: "var(--muted-foreground)" }}>
                   {person.title}
                   {person.interviews[0] ? ` · ${person.interviews[0].company}` : ""} · start later in the loop
@@ -229,7 +229,7 @@ function ListingDesk() {
       <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-16 items-end mb-10">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] mb-3" style={{ color: "var(--navy)" }}>Desk · Candidate</p>
-          <h1 className="font-display leading-none" style={{ fontSize: "clamp(32px, 5vw, 52px)", letterSpacing: "-0.035em", color: "var(--navy)" }}>
+          <h1 className="font-display font-extralight leading-none" style={{ fontSize: "clamp(2.6rem, 6.5vw, 4.8rem)", letterSpacing: "-0.045em", color: "var(--navy)" }}>
             Two paragraphs. Not a form.
           </h1>
         </div>
@@ -296,7 +296,7 @@ function ListingDesk() {
           {(!preview || phase === "write" || phase === "reading") && (
             <div className="border border-dashed p-6 md:p-8 min-h-[280px]" style={{ borderColor: "var(--border-2)" }}>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-4" style={{ color: "var(--ink-3)" }}>Proposed record</p>
-              <p className="font-display text-[26px] leading-[1.1] mb-3" style={{ color: "var(--navy)" }}>
+              <p className="font-display font-normal text-[26px] leading-[1.1] mb-3" style={{ color: "var(--navy)", letterSpacing: "-0.03em" }}>
                 Nothing is issued until the parse is specific.
               </p>
               <p className="text-[15px] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
@@ -310,10 +310,10 @@ function ListingDesk() {
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] mb-5" style={{ color: "var(--ink-3)" }}>
                 Issued record · proposed
               </p>
-              <p className="font-display font-medium leading-none mb-3" style={{ fontSize: "clamp(1.8rem, 3vw, 2.6rem)", color: "var(--navy)" }}>
+              <p className="font-display font-normal leading-none mb-3" style={{ fontSize: "clamp(1.8rem, 3vw, 2.6rem)", color: "var(--navy)", letterSpacing: "-0.03em" }}>
                 {preview.company}
               </p>
-              <p className="font-display text-[22px] leading-none mb-2" style={{ color: "var(--navy)" }}>
+              <p className="font-display font-normal text-[22px] leading-none mb-2" style={{ color: "var(--navy)" }}>
                 {preview.rounds[preview.rounds.length - 1]?.label ?? "Loop"}
               </p>
               <p className="font-mono text-[11px] uppercase tracking-[0.12em] mb-8" style={{ color: "var(--verify)" }}>
@@ -325,7 +325,7 @@ function ListingDesk() {
               <div className="space-y-3 mb-8">
                 {preview.rounds.map(r => (
                   <div key={r.index} className="flex items-baseline justify-between gap-3 border-b pb-2" style={{ borderColor: "var(--border)" }}>
-                    <p className="font-display text-[20px] leading-none" style={{ color: "var(--navy)" }}>{r.label}</p>
+                    <p className="font-display font-normal text-[20px] leading-none" style={{ color: "var(--navy)" }}>{r.label}</p>
                     <span className="font-mono text-[10px] uppercase tracking-wide" style={{ color: "var(--muted-foreground)" }}>
                       {String(r.index).padStart(2, "0")} · {r.type}
                     </span>

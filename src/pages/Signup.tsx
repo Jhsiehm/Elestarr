@@ -35,7 +35,7 @@ export default function Signup() {
           <div className="lg:hidden mb-8">
             <Logo />
           </div>
-          <h1 className="font-display text-[32px] leading-none" style={{ color: "var(--navy)" }}>
+          <h1 className="edn-lg" style={{ color: "var(--navy)" }}>
             {role === "creative" ? "I'm a candidate" : "I'm hiring"}
           </h1>
           <p className="text-[16px] mt-3" style={{ color: "var(--muted-foreground)" }}>

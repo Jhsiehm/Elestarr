@@ -151,7 +151,7 @@ function ProcessSteps({
               }}
             >
               <p className="font-mono text-[11px] mb-3" style={{ color: "var(--navy)" }}>{n}</p>
-              <h3 className="font-display text-[24px] md:text-[26px] leading-none mb-3" style={{ color: "var(--navy)" }}>{t}</h3>
+              <h3 className="font-display font-normal text-[24px] md:text-[26px] leading-none mb-3" style={{ color: "var(--navy)", letterSpacing: "-0.02em" }}>{t}</h3>
               <p className="text-[15px] md:text-[16px] leading-relaxed max-w-[32ch]" style={{ color: "var(--muted-foreground)" }}>{d}</p>
             </div>
           )
@@ -167,7 +167,7 @@ function ProveIt() {
       <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
         <Reveal>
           <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-5" style={{ color: "var(--navy)" }}>How you add an interview</p>
-          <h2 className="font-display font-medium leading-[0.95] max-w-[16ch] mb-4" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.8rem)", color: "var(--navy)", letterSpacing: "-0.03em" }}>
+          <h2 className="font-display font-normal leading-[0.95] max-w-[16ch] mb-4" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.8rem)", color: "var(--navy)", letterSpacing: "-0.04em" }}>
             One interview email. Never the rest of your inbox.
           </h2>
           <p className="text-[18px] leading-relaxed max-w-[42ch] mb-14" style={{ color: "var(--muted-foreground)" }}>
@@ -221,7 +221,7 @@ function TwoPaths() {
                 }}
               >
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--ink-3)" }}>{s.kicker}</p>
-                <h2 className="font-display text-[26px] md:text-[30px] leading-[1.1] mb-6" style={{ color: "var(--navy)" }}>{s.title}</h2>
+                <h2 className="edn-md mb-6" style={{ color: "var(--navy)" }}>{s.title}</h2>
                 <ul className="space-y-3">
                   {s.points.map(p => (
                     <li key={p} className="text-[16px] leading-relaxed max-w-[36ch]" style={{ color: "var(--muted-foreground)" }}>{p}</li>
@@ -286,8 +286,8 @@ function PillarMarquee() {
         {row.map((w, i) => (
           <span key={`${w}-${i}`} className="flex items-baseline gap-8 md:gap-12 pr-8 md:pr-12">
             <span
-              className="font-display font-medium leading-none whitespace-nowrap"
-              style={{ fontSize: "clamp(2.4rem, 6vw, 5.2rem)", color: "var(--navy)", letterSpacing: "-0.04em" }}
+              className="font-display font-extralight leading-none whitespace-nowrap"
+              style={{ fontSize: "clamp(3rem, 8vw, 6.8rem)", color: "var(--navy)", letterSpacing: "-0.055em" }}
             >
               {w}
             </span>
@@ -310,15 +310,16 @@ function FilmGate({ label, steps, index }: { label: string; steps: string[]; ind
   return (
     <div className="film-gate px-10 py-8 min-h-[240px] flex flex-col justify-center" style={{ background: "color-mix(in srgb, var(--navy) 4%, transparent)" }}>
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] mb-6" style={{ color: "var(--ink-3)" }}>{label}</p>
-      <p className="font-display text-[22px] md:text-[26px] leading-none mb-3" style={{ color: "var(--ink-3)", opacity: 0.45 }}>{prev}</p>
+      <p className="font-display font-normal text-[22px] md:text-[26px] leading-none mb-3" style={{ color: "var(--ink-3)", opacity: 0.45, letterSpacing: "-0.02em" }}>{prev}</p>
       <div className="relative py-3">
         <div className="absolute left-0 right-0 top-0 h-px rule-draw" style={{ background: "var(--navy)" }} />
         <p
           key={`${label}-${current}`}
-          className="stamp font-display font-medium leading-none"
+          className="stamp edn-stamp"
           style={{
             fontSize: "clamp(2rem, 4vw, 3.4rem)",
             color: kept ? "var(--verify)" : lost ? "var(--ink-3)" : "var(--navy)",
+            letterSpacing: "-0.04em",
             textDecoration: lost ? "line-through" : "none",
           }}
         >
@@ -326,7 +327,7 @@ function FilmGate({ label, steps, index }: { label: string; steps: string[]; ind
         </p>
         <div className="absolute left-0 right-0 bottom-0 h-px" style={{ background: "var(--navy)" }} />
       </div>
-      <p className="font-display text-[22px] md:text-[26px] leading-none mt-3" style={{ color: "var(--ink-3)", opacity: 0.45 }}>{next}</p>
+      <p className="font-display font-normal text-[22px] md:text-[26px] leading-none mt-3" style={{ color: "var(--ink-3)", opacity: 0.45, letterSpacing: "-0.02em" }}>{next}</p>
     </div>
   )
 }
@@ -339,7 +340,7 @@ function DualLedger() {
     <section ref={ref} id="signals" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
       <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
         <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16 items-end mb-12">
-          <h2 className="font-display font-medium leading-[0.95] max-w-[14ch]" style={{ fontSize: "clamp(2.2rem, 4.5vw, 4rem)", color: "var(--navy)", letterSpacing: "-0.03em" }}>
+          <h2 className="font-display font-normal leading-[0.95] max-w-[14ch]" style={{ fontSize: "clamp(2.2rem, 4.5vw, 4rem)", color: "var(--navy)", letterSpacing: "-0.04em" }}>
             If you don't get the job, those interviews disappear.
           </h2>
           <p className="text-[18px] leading-relaxed max-w-[40ch]" style={{ color: "var(--muted-foreground)" }}>
@@ -389,7 +390,7 @@ function SignalPrinter() {
       <div ref={ref} className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28 grid lg:grid-cols-[1fr_0.9fr] gap-12 lg:gap-20 items-center">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--navy)" }}>What goes on the profile</p>
-          <h2 className="font-display font-medium leading-[0.95] mb-5 max-w-[16ch]" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.8rem)", color: "var(--navy)", letterSpacing: "-0.03em" }}>
+          <h2 className="font-display font-normal leading-[0.95] mb-5 max-w-[16ch]" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.8rem)", color: "var(--navy)", letterSpacing: "-0.04em" }}>
             Not a score. Proof of an interview.
           </h2>
           <p className="text-[17px] leading-relaxed max-w-[38ch]" style={{ color: "var(--muted-foreground)" }}>
@@ -412,9 +413,10 @@ function SignalPrinter() {
             {lines.map((line, i) => (
               <p
                 key={`${spec}-${line}`}
-                className={i === 0 || i === 2 ? "font-display font-medium leading-none" : "font-mono text-[12px] uppercase tracking-[0.14em]"}
+                className={i === 0 || i === 2 ? "font-display font-normal leading-none" : "font-mono text-[12px] uppercase tracking-[0.14em]"}
                 style={{
                   fontSize: i === 0 || i === 2 ? "clamp(1.6rem, 3vw, 2.4rem)" : undefined,
+                  letterSpacing: i === 0 || i === 2 ? "-0.03em" : undefined,
                   color: "var(--navy)",
                   opacity: i < shown ? 1 : 0,
                   transform: i < shown ? "translateY(0)" : "translateY(8px)",
@@ -447,7 +449,7 @@ function ModeStage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--navy)" }}>If you are hiring</p>
-            <h2 className="font-display font-medium leading-[0.95] max-w-[16ch]" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.8rem)", color: "var(--navy)", letterSpacing: "-0.03em" }}>
+            <h2 className="font-display font-normal leading-[0.95] max-w-[16ch]" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.8rem)", color: "var(--navy)", letterSpacing: "-0.04em" }}>
               The wall, then your queue, then the desk.
             </h2>
           </div>
@@ -471,9 +473,10 @@ function ModeStage() {
                     {String(i + 1).padStart(2, "0")} / {m.title}
                   </p>
                   <p
-                    className="font-display leading-[1.1] mb-3"
+                    className="font-display font-normal leading-[1.1] mb-3"
                     style={{
                       fontSize: "clamp(1.6rem, 2.4vw, 2.2rem)",
+                      letterSpacing: "-0.02em",
                       color: "var(--navy)",
                       opacity: onMode ? 1 : 0.58,
                       transform: onMode ? "translateX(0)" : "translateX(0)",
@@ -550,7 +553,7 @@ function BriefWrite() {
             }}
           >
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] mb-2" style={{ color: "var(--navy)" }}>{k}</p>
-            <p className="font-display text-[22px] md:text-[26px] leading-[1.1] mb-1" style={{ color: "var(--navy)" }}>{t}</p>
+            <p className="font-display font-normal text-[22px] md:text-[26px] leading-[1.1] mb-1" style={{ color: "var(--navy)", letterSpacing: "-0.02em" }}>{t}</p>
             <p className="text-[14px]" style={{ color: "var(--muted-foreground)" }}>{d}</p>
           </div>
         ))}
@@ -566,7 +569,7 @@ function DeskPitch({ onOpen }: { onOpen: () => void }) {
         <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-20 items-end mb-14">
           <Reveal>
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-5" style={{ color: "var(--navy)" }}>For hiring teams</p>
-            <h2 className="font-display font-medium leading-[0.95] max-w-[14ch]" style={{ fontSize: "clamp(2.2rem, 4.4vw, 3.9rem)", color: "var(--navy)", letterSpacing: "-0.03em" }}>
+            <h2 className="font-display font-normal leading-[0.95] max-w-[14ch]" style={{ fontSize: "clamp(2.2rem, 4.4vw, 3.9rem)", color: "var(--navy)", letterSpacing: "-0.04em" }}>
               Skip interviews they already did.
             </h2>
           </Reveal>
@@ -583,7 +586,7 @@ function DeskPitch({ onOpen }: { onOpen: () => void }) {
         <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-px mb-16" style={{ background: "var(--border)" }}>
           <Reveal className="p-7 md:p-10" style={{ background: "var(--background)" }}>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-6" style={{ color: "var(--ink-3)" }}>Why this person</p>
-            <p className="font-display text-[28px] md:text-[34px] leading-none mb-3" style={{ color: "var(--navy)" }}>Maya Okonkwo</p>
+            <p className="font-display font-normal text-[28px] md:text-[34px] leading-none mb-3" style={{ color: "var(--navy)", letterSpacing: "-0.02em" }}>Maya Okonkwo</p>
             <p className="font-mono text-[11px] uppercase tracking-[0.12em] mb-6" style={{ color: "var(--muted-foreground)" }}>Figma · final · identity already sampled</p>
             <p className="text-[16px] leading-relaxed max-w-[42ch] mb-6" style={{ color: "var(--foreground)" }}>
               Assessed on identity systems and editorial type in a four-round Figma loop. Both sit at the centre of this role.
@@ -618,7 +621,7 @@ function Bridge() {
       <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
         <Reveal>
           <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-5" style={{ color: "var(--navy)" }}>Who it is for</p>
-          <h2 className="font-display font-medium leading-[0.95] max-w-[18ch] mb-6" style={{ fontSize: "clamp(2.2rem, 4.4vw, 4rem)", color: "var(--navy)", letterSpacing: "-0.03em" }}>
+          <h2 className="font-display font-normal leading-[0.95] max-w-[18ch] mb-6" style={{ fontSize: "clamp(2.2rem, 4.4vw, 4rem)", color: "var(--navy)", letterSpacing: "-0.04em" }}>
             The next company can start later.
           </h2>
           <p className="text-[18px] leading-relaxed max-w-[44ch]" style={{ color: "var(--muted-foreground)" }}>
@@ -628,7 +631,7 @@ function Bridge() {
         <div className="mt-16 grid md:grid-cols-[1fr_auto_1fr] gap-8 md:gap-6 items-center">
           <div className="border p-7 md:p-9" style={{ borderColor: "var(--border-2)" }}>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--ink-3)" }}>If you are a candidate</p>
-            <p className="font-display text-[26px] md:text-[30px] leading-[1.1] mb-3" style={{ color: "var(--navy)" }}>Those weeks still count.</p>
+            <p className="font-display font-normal text-[26px] md:text-[30px] leading-[1.1] mb-3" style={{ color: "var(--navy)", letterSpacing: "-0.02em" }}>Those weeks still count.</p>
             <p className="text-[16px]" style={{ color: "var(--muted-foreground)" }}>The interviews live on your profile. The next company can see how far you already got.</p>
           </div>
           <div className="hidden md:flex flex-col items-center w-28 px-3" aria-hidden="true">
@@ -661,7 +664,7 @@ function Bridge() {
           </div>
           <div className="border p-7 md:p-9" style={{ borderColor: "var(--border-2)" }}>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--ink-3)" }}>If you are an employer</p>
-            <p className="font-display text-[26px] md:text-[30px] leading-[1.1] mb-3" style={{ color: "var(--navy)" }}>Someone already pressure-tested.</p>
+            <p className="font-display font-normal text-[26px] md:text-[30px] leading-[1.1] mb-3" style={{ color: "var(--navy)", letterSpacing: "-0.02em" }}>Someone already pressure-tested.</p>
             <p className="text-[16px]" style={{ color: "var(--muted-foreground)" }}>You are not poaching a Stripe employee. You are finding the person they already interviewed to a final, from the work on their profile.</p>
           </div>
         </div>
@@ -732,29 +735,36 @@ export default function Landing() {
           For candidates and employers
         </p>
         <h1
-          className="fade-up font-display font-medium leading-[0.94] text-balance mx-auto max-w-[18ch] md:max-w-[20ch]"
-          style={{ fontSize: "clamp(2.4rem, 5.2vw, 5rem)", letterSpacing: "-0.04em", color: "var(--navy)" }}
+          className="fade-up text-balance mx-auto max-w-[14ch] md:max-w-[16ch]"
+          style={{ color: "var(--navy)" }}
         >
-          Show the work. Keep the interviews that didn't become a job.
+          <span className="edn-xl block">Show the work.</span>
+          <span className="edn-lg block mt-5 md:mt-6">Keep the interviews that didn't become a job.</span>
         </h1>
         <div
-          className="fade-up mt-12 md:mt-16 mx-auto grid md:grid-cols-2 gap-8 md:gap-x-16 max-w-[36rem] text-left"
+          className="fade-up mt-12 md:mt-16 mx-auto grid md:grid-cols-2 gap-8 md:gap-x-16 max-w-[40rem] text-left"
           style={{ animationDelay: "0.08s" }}
         >
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-2.5" style={{ color: "var(--ink-3)" }}>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-3" style={{ color: "var(--ink-3)" }}>
               Candidate
             </p>
-            <p className="text-[16px] md:text-[17px] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
-              Post the work. Prove how far a company already interviewed you with one email, not your inbox.
+            <p className="edn-md" style={{ color: "var(--navy)" }}>
+              Post the work.
+            </p>
+            <p className="text-[16px] md:text-[17px] leading-relaxed mt-2" style={{ color: "var(--muted-foreground)" }}>
+              Prove how far a company already interviewed you with <em>one email</em>, not your inbox.
             </p>
           </div>
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-2.5" style={{ color: "var(--ink-3)" }}>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-3" style={{ color: "var(--ink-3)" }}>
               Employer
             </p>
-            <p className="text-[16px] md:text-[17px] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
-              Look at the work first. Then see those interviews so you don't start from zero.
+            <p className="edn-md" style={{ color: "var(--navy)" }}>
+              Look at the work first.
+            </p>
+            <p className="text-[16px] md:text-[17px] leading-relaxed mt-2" style={{ color: "var(--muted-foreground)" }}>
+              Then see those interviews so you don't start from zero.
             </p>
           </div>
         </div>
@@ -785,7 +795,7 @@ export default function Landing() {
       <section id="work" className="scroll-mt-24 border-b" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
           <Reveal>
-            <h2 className="font-display font-medium leading-[0.95] mb-6 max-w-[22ch]" style={{ fontSize: "clamp(1.8rem, 3.4vw, 3rem)", color: "var(--navy)", letterSpacing: "-0.03em" }}>
+            <h2 className="font-display font-normal leading-[0.95] mb-6 max-w-[22ch]" style={{ fontSize: "clamp(1.8rem, 3.4vw, 3rem)", color: "var(--navy)", letterSpacing: "-0.03em" }}>
               LinkedIn is a resume. Here you show the work, and the interviews that didn't become a job.
             </h2>
             <p className="text-[18px] leading-relaxed max-w-[46ch] mb-12 md:mb-14" style={{ color: "var(--muted-foreground)" }}>
@@ -801,7 +811,7 @@ export default function Landing() {
               ["Your profile", "This follows you to the next company. It does not reset every time you apply."],
             ].map(([t, d], i) => (
               <Reveal key={t} delay={i * 70} className="border-t pt-6">
-                <h3 className="font-display text-[28px] leading-none mb-3" style={{ color: "var(--navy)" }}>{t}</h3>
+                <h3 className="font-display font-normal text-[28px] leading-none mb-3" style={{ color: "var(--navy)", letterSpacing: "-0.02em" }}>{t}</h3>
                 <p className="text-[16px] leading-relaxed max-w-[36ch]" style={{ color: "var(--muted-foreground)" }}>{d}</p>
               </Reveal>
             ))}
@@ -820,7 +830,7 @@ export default function Landing() {
       <section className="border-t" style={{ borderColor: "var(--navy)", background: "var(--navy)", color: "var(--primary-foreground)" }}>
         <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
-            <h2 className="font-display font-medium leading-[0.95] max-w-[16ch]" style={{ fontSize: "clamp(2.2rem, 4.5vw, 4.2rem)", letterSpacing: "-0.03em" }}>
+            <h2 className="edn-stamp max-w-[12ch]" style={{ fontSize: "clamp(2.4rem, 5vw, 4.4rem)" }}>
               Bring one interview email.
             </h2>
             <p className="mt-4 text-[16px] max-w-[40ch]" style={{ opacity: 0.78 }}>

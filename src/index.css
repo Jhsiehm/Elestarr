@@ -1,6 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,400&family=Newsreader:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&family=Geist+Mono:wght@400;500&display=swap');
 @import 'tailwindcss';
 
+@font-face {
+  font-family: "PP Editorial New";
+  src: url("./fonts/PPEditorialNew-Ultralight.otf") format("opentype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Editorial New";
+  src: url("./fonts/PPEditorialNew-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Editorial New";
+  src: url("./fonts/PPEditorialNew-Regular.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Editorial New";
+  src: url("./fonts/PPEditorialNew-Ultrabold.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Grainy off-white paper. Midnight ink. Editorial type. */
 :root {
   --background: #f5f0e6;
@@ -68,9 +100,58 @@ body {
 ::selection { background: var(--navy); color: var(--background); }
 :focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
 
-.font-display { font-family: 'Fraunces', 'Newsreader', serif; font-optical-sizing: auto; }
+.font-display {
+  font-family: "PP Editorial New", "Fraunces", "Newsreader", serif;
+  font-weight: 400;
+  font-synthesis: none;
+}
+.font-display.font-extralight {
+  font-weight: 200;
+}
 .font-body { font-family: 'Newsreader', 'Fraunces', serif; font-optical-sizing: auto; }
 .font-mono { font-family: 'Geist Mono', ui-monospace, monospace; }
+
+/* Pangram specimen: Ultralight at huge sizes, Regular as the reading cut, Ultrabold for one statement. */
+.edn-xl {
+  font-family: "PP Editorial New", "Fraunces", serif;
+  font-weight: 200;
+  font-synthesis: none;
+  letter-spacing: -0.05em;
+  line-height: 0.88;
+  font-size: clamp(3.1rem, 8.4vw, 7.2rem);
+}
+.edn-lg {
+  font-family: "PP Editorial New", "Fraunces", serif;
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  font-size: clamp(1.7rem, 3.2vw, 2.55rem);
+}
+.edn-md {
+  font-family: "PP Editorial New", "Fraunces", serif;
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: -0.028em;
+  line-height: 1.12;
+  font-size: clamp(1.35rem, 2.1vw, 1.75rem);
+}
+.edn-stamp {
+  font-family: "PP Editorial New", "Fraunces", serif;
+  font-weight: 800;
+  font-synthesis: none;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+h2.font-display {
+  font-weight: 400;
+  letter-spacing: -0.038em;
+  line-height: 0.96;
+}
+h3.font-display {
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
 
 .logo-mark {
   display: block;

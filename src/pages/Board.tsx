@@ -18,7 +18,7 @@ function InterviewModal({ candidate, onClose }: { candidate: Candidate; onClose:
         <div className="sticky top-0 border-b px-6 py-4 flex items-center justify-between" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-0.5" style={{ color: "var(--muted-foreground)" }}>Interviews on this profile</p>
-            <h3 className="font-display text-xl">{candidate.name}</h3>
+            <h3 className="font-display font-normal text-xl">{candidate.name}</h3>
           </div>
           <button onClick={onClose} className="w-8 h-8 grid place-items-center font-mono text-sm" style={{ color: "var(--muted-foreground)" }}>
             Close
@@ -30,7 +30,7 @@ function InterviewModal({ candidate, onClose }: { candidate: Candidate; onClose:
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-display text-[15px]">{iv.company}</span>
+                    <span className="font-display font-normal text-[15px]">{iv.company}</span>
                     <span className="font-mono text-[10px]" style={{ color: iv.verified ? "var(--navy)" : "var(--ink-3)" }}>
                           {iv.verified ? "email proved" : "listed"}
                     </span>
@@ -106,7 +106,7 @@ function PinCard({
             onClick={onViewProfile}
           />
           <button className="min-w-0 flex-1 text-left" onClick={onViewProfile}>
-            <p className="font-display text-[14px] truncate leading-tight" style={{ color: "var(--navy)" }}>{candidate.name}</p>
+            <p className="font-display font-normal text-[15px] truncate leading-tight" style={{ color: "var(--navy)" }}>{candidate.name}</p>
             <p className="font-mono text-[10px] truncate uppercase tracking-[0.08em]" style={{ color: "var(--muted-foreground)" }}>{candidate.title}</p>
           </button>
           <button
@@ -135,7 +135,7 @@ function Pipeline() {
   return (
     <div className="max-w-[1400px] mx-auto px-5 md:px-7 mt-[22px] mb-[90px]">
       <div className="mb-[18px]">
-        <h2 className="font-display text-[32px] leading-none" style={{ color: "var(--navy)" }}>Pipeline</h2>
+        <h2 className="font-display font-normal text-[32px] leading-none" style={{ color: "var(--navy)", letterSpacing: "-0.03em" }}>Pipeline</h2>
         <p className="text-[16px] mt-3 max-w-[42ch]" style={{ color: "var(--muted-foreground)" }}>
           Your hiring queue. Open anyone to see the work. This is not a ranking.
         </p>
@@ -184,7 +184,7 @@ function Pipeline() {
                       opacity: dragId === c.id ? 0.4 : 1,
                     }}
                   >
-                    <div className="font-display text-[15px]">{c.name}</div>
+                    <div className="font-display font-normal text-[15px]">{c.name}</div>
                     <div className="font-mono text-[10px] uppercase tracking-wider mt-0.5" style={{ color: "var(--muted-foreground)" }}>{c.disc}</div>
                     {proof && (
                       <div className="font-mono text-[11px] mt-2.5" style={{ color: "var(--navy)" }}>
@@ -249,7 +249,7 @@ export default function Board() {
       ) : (
         <>
           <section className="max-w-[1440px] mx-auto px-5 md:px-7 pt-10 pb-6">
-            <h1 className="font-display leading-none" style={{ fontSize: "clamp(32px, 5vw, 56px)", letterSpacing: "-0.035em", color: "var(--navy)" }}>
+            <h1 className="font-display font-extralight leading-none" style={{ fontSize: "clamp(2.6rem, 6.5vw, 4.8rem)", letterSpacing: "-0.045em", color: "var(--navy)" }}>
               The wall.
             </h1>
             <p className="mt-4 text-[17px] max-w-[40ch]" style={{ color: "var(--muted-foreground)" }}>

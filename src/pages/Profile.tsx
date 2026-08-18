@@ -60,7 +60,7 @@ export default function Profile() {
             <Seal tier={candidate.tier} />
           </div>
           <div>
-            <h1 className="font-display text-[28px] leading-[1.05]" style={{ color: "var(--navy)" }}>{candidate.name}</h1>
+            <h1 className="font-display font-normal text-[28px] leading-[1.05]" style={{ color: "var(--navy)", letterSpacing: "-0.03em" }}>{candidate.name}</h1>
             <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] mt-1.5" style={{ color: "var(--navy)" }}>{candidate.title}</p>
             <p className="text-[15px] leading-relaxed mt-3" style={{ color: "var(--muted-foreground)" }}>{twoSentences(candidate.bio)}</p>
             {candidate.available && (
@@ -96,7 +96,7 @@ export default function Profile() {
           {piece && (
             <div className="border-b p-5 md:p-8" style={{ borderColor: "var(--border)" }}>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-2" style={{ color: "var(--muted-foreground)" }}>Selected work</p>
-              <h2 className="font-display text-[32px] md:text-[40px] leading-none mb-1" style={{ color: "var(--navy)" }}>{piece.title}</h2>
+              <h2 className="font-display font-normal text-[32px] md:text-[40px] leading-none mb-1" style={{ color: "var(--navy)", letterSpacing: "-0.03em" }}>{piece.title}</h2>
               <p className="font-mono text-[11px] mb-5" style={{ color: "var(--muted-foreground)" }}>{piece.year} · {candidate.disc}</p>
               <div className="overflow-hidden mb-5" style={{ background: "var(--secondary)" }}>
                 <img src={piece.img} alt="" className="w-full object-cover" style={{ maxHeight: 420 }} />
@@ -118,7 +118,7 @@ export default function Profile() {
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-display text-[16px]">{iv.company}</span>
+                        <span className="font-display font-normal text-[16px]">{iv.company}</span>
                         <span className="font-mono text-[10px]" style={{ color: iv.verified ? "var(--navy)" : "var(--ink-3)" }}>
                           {iv.verified ? "email proved" : "listed"}
                         </span>
@@ -162,7 +162,7 @@ export default function Profile() {
             <div className="space-y-2">
               {verified.map((iv, i) => (
                 <div key={i}>
-                  <p className="font-display text-[13px]">{iv.company} · {iv.round}</p>
+                  <p className="font-display font-normal text-[13px]">{iv.company} · {iv.round}</p>
                   <p className="font-mono text-[10px]" style={{ color: "var(--muted-foreground)" }}>{iv.date}</p>
                 </div>
               ))}
@@ -180,7 +180,7 @@ export default function Profile() {
                 { n: verified.length, l: "Proved" },
               ].map(s => (
                 <div key={s.l} className="py-3 border-r last:border-r-0" style={{ borderColor: "var(--border)" }}>
-                  <p className="font-display text-base">{s.n}</p>
+                  <p className="font-display font-normal text-base">{s.n}</p>
                   <p className="font-mono text-[8px] uppercase" style={{ color: "var(--muted-foreground)" }}>{s.l}</p>
                 </div>
               ))}

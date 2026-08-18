@@ -52,7 +52,7 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
       >
         <div className="px-[22px] py-5 border-b flex gap-3 items-start" style={{ borderColor: "var(--border)" }}>
           <div>
-            <h3 id="verify-title" className="font-display font-extrabold text-xl tracking-tight">Add an interview to this profile</h3>
+            <h3 id="verify-title" className="font-display font-normal text-xl tracking-tight">Add an interview to this profile</h3>
             <p className="text-[12.5px] mt-1.5 max-w-[42ch]" style={{ color: "var(--muted-foreground)" }}>
               One original email. If it is real, the interview goes on this profile. We never ask for the rest of your inbox.
             </p>
@@ -85,7 +85,7 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
                   <path d="M12 3v12m0 0 4-4m-4 4-4-4" />
                   <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
                 </svg>
-                <div className="font-display font-bold text-[15px]">Drop the original email here</div>
+                <div className="font-display font-normal text-[15px]">Drop the original email here</div>
                 <p className="text-xs mt-1.5 max-w-[34ch] mx-auto" style={{ color: "var(--muted-foreground)" }}>
                   In Gmail: open the interview email, click the menu, Show original, Download. Drag that .eml file in.
                 </p>
@@ -119,7 +119,7 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
                     {CHECK}
                   </div>
                   <div>
-                    <h4 className="text-[13.5px] font-semibold">{s.h}</h4>
+                    <h4 className="text-[13.5px] font-medium">{s.h}</h4>
                     <p className="font-mono text-[11px] mt-0.5 leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
                       {s.p.split("PASS")[0]}
                       {s.p.includes("PASS") && <span style={{ color: "var(--accent)" }}>PASS</span>}
@@ -134,7 +134,7 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
                     {CHECK}
                   </div>
                   <div>
-                    <b className="font-display text-[15px]">Final round, Stripe</b>
+                    <b className="edn-stamp text-[22px]">Final round, Stripe</b>
                     <span className="block font-mono text-[11px] mt-0.5" style={{ color: "var(--muted-foreground)" }}>On this profile · email proved</span>
                   </div>
                 </div>
