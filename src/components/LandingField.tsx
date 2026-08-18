@@ -10,7 +10,7 @@ export default function LandingField() {
     if (!hero) return
     const io = new IntersectionObserver(([entry]) => {
       setStage(entry.isIntersecting ? "hero" : "page")
-    }, { threshold: 0.32 })
+    }, { threshold: 0.48 })
     io.observe(hero)
     return () => io.disconnect()
   }, [])
@@ -18,6 +18,7 @@ export default function LandingField() {
   return (
     <div className="land-field" data-stage={stage} aria-hidden="true">
       <img className="land-eye" src={eye} alt="" decoding="async" />
+      <img className="land-eye land-eye-scan" src={eye} alt="" decoding="async" />
       <img className="land-face" src={portrait} alt="" decoding="async" />
       <img className="land-face eye-lit" src={portrait} alt="" decoding="async" />
     </div>
