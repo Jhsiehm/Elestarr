@@ -1,10 +1,10 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import { candidates, type Stage } from "./data"
 
-export type Page = "landing" | "signup" | "board" | "profile"
+export type Page = "landing" | "signup" | "board" | "profile" | "onboard"
 export type Role = "firm" | "creative"
 export type Mode = Role
-export type WallView = "wall" | "pipeline" | "desk"
+export type WallView = "wall" | "pipeline" | "desk" | "listings"
 
 type RouterCtx = {
   page: Page
@@ -31,6 +31,8 @@ type RouterCtx = {
   signOut: () => void
   intent: Role
   setIntent: (r: Role) => void
+  onboarded: boolean
+  finishOnboard: (next?: WallView) => void
 }
 
 const Ctx = createContext<RouterCtx>(null!)
@@ -52,6 +54,7 @@ export function RouterProvider({ children }: { children: ReactNode }) {
   const [stages, setStages] = useState<Record<number, Stage>>(initialStages)
   const [toast, setToast] = useState<string | null>(null)
   const [signedIn, setSignedIn] = useState(false)
+  const [onboarded, setOnboarded] = useState(false)
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark)
@@ -89,11 +92,25 @@ export function RouterProvider({ children }: { children: ReactNode }) {
     setRole(r)
     setMode(r)
     setSignedIn(true)
-    setPage(r === "creative" ? "profile" : "board")
+    if (r === "creative") {
+      setProfileId(1)
+      setPage("onboard")
+    } else {
+      setWallView("wall")
+      setPage("board")
+    }
+  }
+
+  const finishOnboard = (next: WallView = "listings") => {
+    setOnboarded(true)
+    setWallView(next)
+    setPage("board")
   }
 
   const signOut = () => {
     setSignedIn(false)
+    setOnboarded(false)
+    setWallView("wall")
     setPage("landing")
   }
 
@@ -124,6 +141,8 @@ export function RouterProvider({ children }: { children: ReactNode }) {
         signOut,
         intent,
         setIntent,
+        onboarded,
+        finishOnboard,
       }}
     >
       {children}

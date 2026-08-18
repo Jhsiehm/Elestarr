@@ -5,6 +5,7 @@ import VerifyRound from "../components/VerifyRound"
 import { candidates, AESTHETIC_FILTERS, STAGES, publicInterview, type Candidate, type Stage } from "../data"
 import { useRouter } from "../router"
 import Desk from "./Desk"
+import Listings from "./Listings"
 
 function InterviewModal({ candidate, onClose }: { candidate: Candidate; onClose: () => void }) {
   return (
@@ -246,6 +247,8 @@ export default function Board() {
         <Pipeline />
       ) : wallView === "desk" ? (
         <Desk />
+      ) : wallView === "listings" ? (
+        <Listings />
       ) : (
         <>
           <section className="max-w-[1440px] mx-auto px-5 md:px-7 pt-10 pb-6">
@@ -254,7 +257,7 @@ export default function Board() {
             </h1>
             <p className="mt-4 text-[17px] max-w-[40ch]" style={{ color: "var(--muted-foreground)" }}>
               {mode === "creative"
-                ? "This is how employers meet you. Open a pin to add an interview to a profile."
+                ? "This is how employers meet you. Your work sits here with everyone else."
                 : "Open anyone from the work they published. Proven interviews sit next to it."}
             </p>
           </section>

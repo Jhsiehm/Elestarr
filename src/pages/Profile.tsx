@@ -3,6 +3,7 @@ import AppNav from "../components/AppNav"
 import Seal from "../components/Seal"
 import VerifyRound from "../components/VerifyRound"
 import { getCandidate } from "../data"
+import { listingsFor } from "../listings"
 import { useRouter } from "../router"
 
 function twoSentences(text: string) {
@@ -11,11 +12,13 @@ function twoSentences(text: string) {
 }
 
 export default function Profile() {
-  const { navigate, profileId, workIndex, mode, contact } = useRouter()
+  const { navigate, profileId, workIndex, mode, contact, setWallView } = useRouter()
   const candidate = getCandidate(profileId)
   const [verify, setVerify] = useState(false)
   const [selected, setSelected] = useState(workIndex)
   const verified = candidate.interviews.filter(iv => iv.verified)
+  const roles = listingsFor(candidate)
+  const mine = mode === "creative"
 
   const works = useMemo(() => candidate.portfolioImages.map((img, i) => ({
     id: i,
@@ -44,9 +47,29 @@ export default function Profile() {
       <AppNav />
 
       <div className="border-b flex items-center gap-4 px-5 py-2.5 text-xs" style={{ borderColor: "var(--border)" }}>
-        <button onClick={() => navigate("board")} className="font-medium" style={{ color: "var(--muted-foreground)" }}>
-          Back to the wall
-        </button>
+        {mine ? (
+          <>
+            <button
+              onClick={() => { setWallView("listings"); navigate("board") }}
+              className="font-medium"
+              style={{ color: "var(--navy)" }}
+            >
+              Roles
+            </button>
+            <span style={{ color: "var(--border)" }}>|</span>
+            <button
+              onClick={() => { setWallView("wall"); navigate("board") }}
+              className="font-medium"
+              style={{ color: "var(--muted-foreground)" }}
+            >
+              How they see you
+            </button>
+          </>
+        ) : (
+          <button onClick={() => navigate("board")} className="font-medium" style={{ color: "var(--muted-foreground)" }}>
+            Back to the wall
+          </button>
+        )}
         <span style={{ color: "var(--border)" }}>|</span>
         <span className="font-mono uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>
           {candidate.disc} · {candidate.location}
@@ -174,10 +197,11 @@ export default function Profile() {
               <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: "var(--muted-foreground)" }}>Profile</p>
               <span className="font-mono text-[9px]" style={{ color: "var(--muted-foreground)" }}>E/P/{String(4280 + candidate.id).padStart(6, "0")}</span>
             </div>
-            <div className="grid grid-cols-2 text-center border" style={{ borderColor: "var(--border)" }}>
+            <div className={`grid text-center border ${mine ? "grid-cols-3" : "grid-cols-2"}`} style={{ borderColor: "var(--border)" }}>
               {[
                 { n: works.length, l: "Work" },
                 { n: verified.length, l: "Proved" },
+                ...(mine ? [{ n: roles.length, l: "Roles" }] : []),
               ].map(s => (
                 <div key={s.l} className="py-3 border-r last:border-r-0" style={{ borderColor: "var(--border)" }}>
                   <p className="font-display font-normal text-base">{s.n}</p>

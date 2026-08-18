@@ -3,6 +3,7 @@ import Landing from "./pages/Landing"
 import Signup from "./pages/Signup"
 import Board from "./pages/Board"
 import Profile from "./pages/Profile"
+import Onboard from "./pages/Onboard"
 import Toast from "./components/Toast"
 import EyeFade from "./components/EyeFade"
 import LandingField from "./components/LandingField"
@@ -11,6 +12,7 @@ function Pages() {
   const { page } = useRouter()
   if (page === "landing") return <Landing />
   if (page === "signup") return <Signup />
+  if (page === "onboard") return <Onboard />
   if (page === "board") return <Board />
   if (page === "profile") return <Profile />
   return null

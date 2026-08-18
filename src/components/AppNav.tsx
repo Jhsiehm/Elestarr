@@ -10,13 +10,15 @@ export default function AppNav() {
   const tabs = [
     { label: "Wall", show: true, onClick: () => { setWallView("wall"); navigate("board") }, active: page === "board" && wallView === "wall" },
     { label: "Pipeline", show: mode === "firm", onClick: () => { setWallView("pipeline"); navigate("board") }, active: page === "board" && wallView === "pipeline" },
+    { label: "Listings", show: mode === "creative", onClick: () => { setWallView("listings"); navigate("board") }, active: page === "board" && wallView === "listings" },
     { label: "Desk", show: true, onClick: () => { setWallView("desk"); navigate("board") }, active: page === "board" && wallView === "desk" },
     { label: "Profile", show: true, onClick: () => navigate("profile"), active: page === "profile" },
   ]
 
   const switchMode = (next: Mode) => {
     setMode(next)
-    if (next === "creative" && wallView === "pipeline") setWallView("wall")
+    if (next === "creative" && wallView === "pipeline") setWallView("listings")
+    if (next === "firm" && wallView === "listings") setWallView("wall")
   }
 
   return (
