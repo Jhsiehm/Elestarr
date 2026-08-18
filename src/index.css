@@ -117,10 +117,31 @@ html.dark .grain { mix-blend-mode: overlay; opacity: 0.14; }
   width: min(58vw, 640px);
 }
 .eye-field-hero img {
-  top: 38%;
-  left: 50%;
-  width: min(72vw, 860px);
-  transform: translate3d(-50%, 0, 0);
+  top: 46%;
+  right: -8%;
+  left: auto;
+  width: min(68vw, 820px);
+}
+.eye-field-hero .eye-lit {
+  --eye-end: 0.055;
+  mask-image: repeating-linear-gradient(
+    90deg,
+    #000 0 14%,
+    transparent 14% 32%
+  );
+  mask-size: 240% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: repeating-linear-gradient(
+    90deg,
+    #000 0 14%,
+    transparent 14% 32%
+  );
+  -webkit-mask-size: 240% 100%;
+  -webkit-mask-repeat: no-repeat;
+  animation:
+    eye-in 1.9s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards,
+    eye-strip 11s ease-in-out 2s infinite;
+  will-change: mask-position, -webkit-mask-position;
 }
 html.dark .eye-field img {
   mix-blend-mode: screen;
@@ -130,8 +151,92 @@ html.dark .eye-field img {
   from { opacity: 0; }
   to { opacity: var(--eye-end, 0.16); }
 }
+@keyframes eye-strip {
+  0% {
+    mask-position: 0% 0;
+    -webkit-mask-position: 0% 0;
+  }
+  50% {
+    mask-position: 100% 0;
+    -webkit-mask-position: 100% 0;
+  }
+  100% {
+    mask-position: 0% 0;
+    -webkit-mask-position: 0% 0;
+  }
+}
 .eye-field-site { --eye-end: 0.11; }
-.eye-field-hero { --eye-end: 0.14; }
+.eye-field-hero { --eye-end: 0.10; }
+
+.land-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.land-field img {
+  position: absolute;
+  display: block;
+  max-width: none;
+  mix-blend-mode: multiply;
+}
+.land-eye {
+  top: 12%;
+  left: 50%;
+  width: min(54vw, 600px);
+  transform: translate3d(-50%, 0, 0);
+  opacity: 0;
+  animation: eye-in 1.9s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards;
+  --eye-end: 0.18;
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.land-field[data-stage="page"] .land-eye {
+  animation: none;
+  opacity: 0;
+  transform: translate3d(-50%, -14px, 0) scale(0.96);
+}
+.land-face {
+  top: 18%;
+  right: -8%;
+  width: min(68vw, 820px);
+  opacity: 0;
+  transform: translate3d(7%, 0, 0);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.land-field[data-stage="page"] .land-face {
+  opacity: 0.10;
+  transform: translate3d(0, 0, 0);
+}
+.land-field[data-stage="page"] .land-face.eye-lit {
+  --eye-end: 0.055;
+  opacity: 0.055;
+  mask-image: repeating-linear-gradient(
+    90deg,
+    #000 0 14%,
+    transparent 14% 32%
+  );
+  mask-size: 240% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: repeating-linear-gradient(
+    90deg,
+    #000 0 14%,
+    transparent 14% 32%
+  );
+  -webkit-mask-size: 240% 100%;
+  -webkit-mask-repeat: no-repeat;
+  animation: eye-strip 11s ease-in-out 0.4s infinite;
+  will-change: mask-position, -webkit-mask-position;
+}
+.land-field[data-stage="hero"] .land-face.eye-lit {
+  opacity: 0;
+  animation: none;
+  will-change: auto;
+}
+html.dark .land-field img {
+  mix-blend-mode: screen;
+  filter: invert(1) hue-rotate(180deg);
+}
 
 .vignette {
   position: fixed;
@@ -190,6 +295,11 @@ html.dark .eye-field img {
   0% { transform: scaleY(0.2); opacity: 0.2; }
   40% { transform: scaleY(1); opacity: 1; }
   100% { transform: scaleY(0.2); opacity: 0.2; }
+}
+@keyframes seal-in {
+  0% { opacity: 0; transform: scale(1.14) rotate(-10deg); }
+  62% { opacity: 1; transform: scale(0.97) rotate(-6deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-6deg); }
 }
 
 .marquee {
@@ -259,6 +369,11 @@ html.dark .eye-field img {
   animation: gate-tick 1.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
+.seal-in {
+  animation: seal-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  pointer-events: none;
+}
+
 .swipe-left  { animation: swipe-left  0.38s ease-in forwards; }
 .swipe-right { animation: swipe-right 0.38s ease-in forwards; }
 .card-in     { animation: card-in     0.3s  ease-out forwards; }
@@ -297,6 +412,12 @@ html.dark .eye-field img {
   * { animation: none !important; transition: none !important; }
   .wall-card { opacity: 1; transform: none; }
   .eye-field img { opacity: var(--eye-end, 0.16); }
+  .eye-field-hero .eye-lit,
+  .land-field .eye-lit { opacity: 0 !important; visibility: hidden; will-change: auto; }
+  .land-eye { opacity: 0.18; transform: translate3d(-50%, 0, 0); }
+  .land-field[data-stage="page"] .land-eye { opacity: 0; }
+  .land-field[data-stage="page"] .land-face { opacity: 0.10; transform: none; }
   .marquee-track { transform: none; will-change: auto; }
   .stamp { opacity: 1; transform: none; }
+  .seal-in { opacity: 1; transform: rotate(-6deg); }
 }

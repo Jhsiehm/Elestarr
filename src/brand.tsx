@@ -1,4 +1,4 @@
-import mark from "./assets/elestarr-mark.png"
+import wordmark from "./assets/elestarr-wordmark.png"
 
 export default function Logo({
   size = "md",
@@ -7,18 +7,16 @@ export default function Logo({
   size?: "sm" | "md" | "lg"
   invert?: boolean
 }) {
-  const h = size === "lg" ? 42 : size === "sm" ? 22 : 32
-  const text = size === "lg" ? "text-[22px]" : size === "sm" ? "text-sm" : "text-base"
+  const h = size === "lg" ? 44 : size === "sm" ? 24 : 30
 
   return (
-    <span className={`inline-flex items-center gap-2 ${text}`} style={{ letterSpacing: "-0.03em" }}>
+    <span className="inline-flex items-center">
       <img
-        src={mark}
-        alt=""
+        src={wordmark}
+        alt="Elestarr"
         className={`logo-mark flex-none ${invert ? "logo-mark-on-dark" : ""}`}
         style={{ height: h, width: "auto" }}
       />
-      <span className="font-display font-medium tracking-[0.14em] uppercase" style={{ letterSpacing: "0.14em" }}>Elestarr</span>
     </span>
   )
 }

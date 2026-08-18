@@ -8,10 +8,10 @@ const CHECK = (
 )
 
 const STEPS = [
-  { h: "Email received", p: "stripe-recruiting.eml · original headers intact" },
-  { h: "DKIM signature", p: "PASS · cryptographically signed by stripe.com, not tampered" },
-  { h: "Sender is a real employer", p: "stripe.com matched to a known company, not a domain the candidate owns" },
-  { h: "AI reads the verified content", p: "advancement detected: Final round · confidence 94% · auto-cleared" },
+  { h: "Email received", p: "The original interview message, headers intact. Not a screenshot. Not a forward." },
+  { h: "The mail is authentic", p: "Signed by the company's own mail server. Not rewritten from your address." },
+  { h: "Sender is a real employer", p: "Matched to a known company, not a domain you own." },
+  { h: "This message only", p: "Highest stage named in the email. Nothing else in your inbox is read." },
 ]
 
 export default function VerifyRound({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -52,9 +52,9 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
       >
         <div className="px-[22px] py-5 border-b flex gap-3 items-start" style={{ borderColor: "var(--border)" }}>
           <div>
-            <h3 id="verify-title" className="font-display font-extrabold text-xl tracking-tight">Verify an interview round</h3>
+            <h3 id="verify-title" className="font-display font-extrabold text-xl tracking-tight">Add an interview to this profile</h3>
             <p className="text-[12.5px] mt-1.5 max-w-[42ch]" style={{ color: "var(--muted-foreground)" }}>
-              No inbox connection. You hand over one email, we prove it is genuine, and nothing else is read.
+              One original email. If it is real, the interview goes on this profile. We never ask for the rest of your inbox.
             </p>
           </div>
           <button
@@ -135,7 +135,7 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
                   </div>
                   <div>
                     <b className="font-display text-[15px]">Final round, Stripe</b>
-                    <span className="block font-mono text-[11px] mt-0.5" style={{ color: "var(--muted-foreground)" }}>verified · issued to this profile</span>
+                    <span className="block font-mono text-[11px] mt-0.5" style={{ color: "var(--muted-foreground)" }}>On this profile · email proved</span>
                   </div>
                 </div>
               )}
@@ -148,9 +148,9 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
             <button
               className="w-full py-3.5 rounded-xl font-mono text-[13px] text-white active:translate-y-px"
               style={{ background: "var(--accent)" }}
-              onClick={() => { showToast("Round verified. Badge added to the profile."); onClose() }}
+              onClick={() => { showToast("Interview added. It lives on this profile."); onClose() }}
             >
-              Add verified badge to profile
+              Add to profile
             </button>
           </div>
         )}

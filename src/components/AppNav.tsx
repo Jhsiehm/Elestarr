@@ -1,19 +1,23 @@
-import { useRouter } from "../router"
+import { useRouter, type Mode } from "../router"
 import Logo from "../brand"
 
 export default function AppNav() {
   const {
     page, navigate, dark, toggleDark, mode, setMode, wallView, setWallView,
-    refsLeft, signOut, signedIn,
+    signOut, signedIn,
   } = useRouter()
 
   const tabs = [
-    { label: "Index", onClick: () => navigate("landing"), active: page === "landing" },
-    { label: "Board", onClick: () => { setWallView("wall"); navigate("board") }, active: page === "board" && wallView === "wall" },
-    { label: "Signals", onClick: () => { setWallView("pipeline"); navigate("board") }, active: page === "board" && wallView === "pipeline" },
-    { label: "Record", onClick: () => navigate("profile"), active: page === "profile" },
-    { label: "Search", onClick: () => { setWallView("wall"); navigate("board") }, active: false },
+    { label: "Wall", show: true, onClick: () => { setWallView("wall"); navigate("board") }, active: page === "board" && wallView === "wall" },
+    { label: "Pipeline", show: mode === "firm", onClick: () => { setWallView("pipeline"); navigate("board") }, active: page === "board" && wallView === "pipeline" },
+    { label: "Desk", show: true, onClick: () => { setWallView("desk"); navigate("board") }, active: page === "board" && wallView === "desk" },
+    { label: "Profile", show: true, onClick: () => navigate("profile"), active: page === "profile" },
   ]
+
+  const switchMode = (next: Mode) => {
+    setMode(next)
+    if (next === "creative" && wallView === "pipeline") setWallView("wall")
+  }
 
   return (
     <header
@@ -25,8 +29,8 @@ export default function AppNav() {
           <Logo size="md" />
         </button>
 
-        <div className="hidden md:flex items-stretch h-full gap-1 ml-4">
-          {tabs.map(t => (
+        <div className="flex items-stretch h-full gap-1 ml-2 overflow-x-auto">
+          {tabs.filter(t => t.show).map(t => (
             <button
               key={t.label}
               onClick={t.onClick}
@@ -45,34 +49,24 @@ export default function AppNav() {
         <div className="flex-1" />
 
         {signedIn && (
-          <>
-            <div className="flex border" style={{ borderColor: "var(--navy)" }}>
-              {(["firm", "vetter"] as const).map(m => (
-                <button
-                  key={m}
-                  onClick={() => setMode(m)}
-                  className="font-mono text-[11px] uppercase tracking-[0.12em] px-3.5 py-1.5"
-                  style={{
-                    background: mode === m ? "var(--navy)" : "transparent",
-                    color: mode === m ? "var(--primary-foreground)" : "var(--navy)",
-                  }}
-                >
-                  {m === "firm" ? "Hiring" : "Vetter"}
-                </button>
-              ))}
-            </div>
-            {mode === "vetter" && (
-              <div className="hidden md:flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em]" style={{ color: "var(--navy)" }}>
-                <span
-                  className="min-w-[22px] h-[22px] px-1.5 grid place-items-center text-[11px] font-medium"
-                  style={{ background: "var(--navy)", color: "var(--primary-foreground)" }}
-                >
-                  {refsLeft}
-                </span>
-                referrals left
-              </div>
-            )}
-          </>
+          <div className="flex border" style={{ borderColor: "var(--navy)" }}>
+            {([
+              { id: "firm" as const, label: "Hiring" },
+              { id: "creative" as const, label: "Candidate" },
+            ]).map(m => (
+              <button
+                key={m.id}
+                onClick={() => switchMode(m.id)}
+                className="font-mono text-[11px] uppercase tracking-[0.12em] px-3.5 py-1.5"
+                style={{
+                  background: mode === m.id ? "var(--navy)" : "transparent",
+                  color: mode === m.id ? "var(--primary-foreground)" : "var(--navy)",
+                }}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
         )}
 
         <button

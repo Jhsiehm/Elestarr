@@ -2,9 +2,9 @@ import { createContext, useContext, useState, useEffect, useCallback, type React
 import { candidates, type Stage } from "./data"
 
 export type Page = "landing" | "signup" | "board" | "profile"
-export type Mode = "firm" | "vetter"
 export type Role = "firm" | "creative"
-export type WallView = "wall" | "pipeline"
+export type Mode = Role
+export type WallView = "wall" | "pipeline" | "desk"
 
 type RouterCtx = {
   page: Page
@@ -29,6 +29,8 @@ type RouterCtx = {
   signedIn: boolean
   signIn: (role: Role) => void
   signOut: () => void
+  intent: Role
+  setIntent: (r: Role) => void
 }
 
 const Ctx = createContext<RouterCtx>(null!)
@@ -43,6 +45,7 @@ export function RouterProvider({ children }: { children: ReactNode }) {
   const [dark, setDark] = useState(false)
   const [mode, setMode] = useState<Mode>("firm")
   const [role, setRole] = useState<Role>("firm")
+  const [intent, setIntent] = useState<Role>("firm")
   const [wallView, setWallView] = useState<WallView>("wall")
   const [refsLeft, setRefsLeft] = useState(3)
   const [vouched, setVouched] = useState<Set<number>>(new Set())
@@ -84,9 +87,9 @@ export function RouterProvider({ children }: { children: ReactNode }) {
 
   const signIn = (r: Role) => {
     setRole(r)
-    setMode(r === "creative" ? "vetter" : "firm")
+    setMode(r)
     setSignedIn(true)
-    setPage("board")
+    setPage(r === "creative" ? "profile" : "board")
   }
 
   const signOut = () => {
@@ -119,6 +122,8 @@ export function RouterProvider({ children }: { children: ReactNode }) {
         signedIn,
         signIn,
         signOut,
+        intent,
+        setIntent,
       }}
     >
       {children}

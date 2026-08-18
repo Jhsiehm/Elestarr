@@ -359,3 +359,7 @@ export const candidates: Candidate[] = [
 export function getCandidate(id: number) {
   return candidates.find(c => c.id === id) ?? candidates[0]
 }
+
+export function publicInterview(c: Candidate) {
+  return c.interviews.find(i => i.verified) ?? c.interviews[0]
+}

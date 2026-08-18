@@ -1,11 +1,12 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter, type Role } from "../router"
 import Logo from "../brand"
 import poster from "../assets/elestarr-poster.png"
 
 export default function Signup() {
-  const { signIn } = useRouter()
-  const [role, setRole] = useState<Role>("firm")
+  const { signIn, intent } = useRouter()
+  const [role, setRole] = useState<Role>(intent)
+  useEffect(() => { setRole(intent) }, [intent])
 
   return (
     <div className="min-h-[100dvh] grid lg:grid-cols-[1.05fr_0.95fr]" style={{ background: "transparent", color: "var(--foreground)" }}>
@@ -34,15 +35,19 @@ export default function Signup() {
           <div className="lg:hidden mb-8">
             <Logo />
           </div>
-          <h1 className="font-display text-[32px] leading-none" style={{ color: "var(--navy)" }}>Sign in</h1>
+          <h1 className="font-display text-[32px] leading-none" style={{ color: "var(--navy)" }}>
+            {role === "creative" ? "I'm a candidate" : "I'm hiring"}
+          </h1>
           <p className="text-[16px] mt-3" style={{ color: "var(--muted-foreground)" }}>
-            Demo only. Any details continue.
+            {role === "creative"
+              ? "Show your work. Keep interviews that didn't become a job. One email. Not your whole inbox."
+              : "Look at what they made. Then see how far another company already interviewed them."}
           </p>
 
           <div className="flex p-[3px] rounded-[10px] border mt-[22px] mb-[18px]" style={{ background: "var(--secondary)", borderColor: "var(--border)" }}>
             {([
+              { id: "creative" as const, label: "I'm a candidate" },
               { id: "firm" as const, label: "I'm hiring" },
-              { id: "creative" as const, label: "I'm a creative" },
             ]).map(r => (
               <button
                 key={r.id}

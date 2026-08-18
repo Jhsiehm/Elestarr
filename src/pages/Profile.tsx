@@ -2,22 +2,8 @@ import { useEffect, useMemo, useState } from "react"
 import AppNav from "../components/AppNav"
 import Seal from "../components/Seal"
 import VerifyRound from "../components/VerifyRound"
-import { getCandidate, VETTERS, type InterviewRound } from "../data"
+import { getCandidate } from "../data"
 import { useRouter } from "../router"
-
-function ResultBadge({ result }: { result: InterviewRound["result"] }) {
-  const color: Record<InterviewRound["result"], string> = {
-    Offer: "#3f5148",
-    Rejected: "var(--navy)",
-    Withdrew: "var(--muted-foreground)",
-    "In Progress": "var(--foreground)",
-  }
-  return (
-    <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide border" style={{ color: color[result], borderColor: "var(--border)" }}>
-      {result}
-    </span>
-  )
-}
 
 function twoSentences(text: string) {
   const parts = text.split(/(?<=[.!?])\s+/).filter(Boolean)
@@ -25,13 +11,11 @@ function twoSentences(text: string) {
 }
 
 export default function Profile() {
-  const { navigate, profileId, workIndex, mode, refsLeft, vouched, spendReferral, contact, showToast } = useRouter()
+  const { navigate, profileId, workIndex, mode, contact } = useRouter()
   const candidate = getCandidate(profileId)
-  const v = VETTERS[candidate.vch]
-  const already = vouched.has(candidate.id)
   const [verify, setVerify] = useState(false)
-  const [credW, setCredW] = useState(0)
   const [selected, setSelected] = useState(workIndex)
+  const verified = candidate.interviews.filter(iv => iv.verified)
 
   const works = useMemo(() => candidate.portfolioImages.map((img, i) => ({
     id: i,
@@ -44,20 +28,14 @@ export default function Profile() {
     setSelected(Math.min(workIndex, Math.max(0, works.length - 1)))
   }, [candidate.id, workIndex, works.length])
 
-  useEffect(() => {
-    setCredW(0)
-    const t = requestAnimationFrame(() => setCredW(candidate.cred * 100))
-    return () => cancelAnimationFrame(t)
-  }, [candidate.cred, candidate.id])
-
   const piece = works[selected] ?? works[0]
   const first = candidate.name.split(" ")[0]
   const act = () => {
     if (mode === "firm") {
       contact(candidate.name)
       navigate("board")
-    } else if (spendReferral(candidate.id)) {
-      showToast(`You vouched for <span class="font-mono text-xs" style="color:var(--accent-ink)">${candidate.name}</span>. Referral spent.`)
+    } else {
+      setVerify(true)
     }
   }
 
@@ -88,16 +66,6 @@ export default function Profile() {
             {candidate.available && (
               <p className="font-mono text-[10px] uppercase tracking-[0.12em] mt-3" style={{ color: "var(--navy)" }}>Open to work</p>
             )}
-          </div>
-
-          <div>
-            <div className="flex justify-between font-mono text-[10px] uppercase tracking-wider mb-1.5" style={{ color: "var(--muted-foreground)" }}>
-              <span>Credibility</span>
-              <span>{candidate.cred.toFixed(2)}</span>
-            </div>
-            <div className="h-px overflow-hidden" style={{ background: "var(--secondary)" }}>
-              <div className="h-full transition-[width] duration-1000" style={{ width: `${credW}%`, background: "var(--navy)" }} />
-            </div>
           </div>
 
           <div>
@@ -140,36 +108,39 @@ export default function Profile() {
           )}
 
           <div className="p-5 md:p-8">
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-4" style={{ color: "var(--muted-foreground)" }}>Interview record</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-1" style={{ color: "var(--muted-foreground)" }}>Interviews on this profile</p>
+            <p className="text-[13px] mb-4 max-w-[42ch]" style={{ color: "var(--muted-foreground)" }}>
+              Company and how far they got. The email is proved. Rejections stay off the public record.
+            </p>
             <div className="space-y-3">
-              {candidate.interviews.map((iv, i) => (
+              {(mode === "firm" ? verified : candidate.interviews).map((iv, i) => (
                 <div key={i} className="border p-4" style={{ borderColor: "var(--border)" }}>
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-display text-[16px]">{iv.company}</span>
                         <span className="font-mono text-[10px]" style={{ color: iv.verified ? "var(--navy)" : "var(--ink-3)" }}>
-                          {iv.verified ? "verified" : "unverified"}
+                          {iv.verified ? "email proved" : "listed"}
                         </span>
                       </div>
                       <p className="text-xs mt-0.5" style={{ color: "var(--muted-foreground)" }}>{iv.role}</p>
                     </div>
-                    <ResultBadge result={iv.result} />
                   </div>
-                  <div className="grid grid-cols-3 gap-2 text-xs">
-                    <div><p className="mb-0.5 font-mono text-[10px] uppercase" style={{ color: "var(--muted-foreground)" }}>Type</p><p>{iv.type}</p></div>
-                    <div><p className="mb-0.5 font-mono text-[10px] uppercase" style={{ color: "var(--muted-foreground)" }}>Stage</p><p>{iv.round}</p></div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div><p className="mb-0.5 font-mono text-[10px] uppercase" style={{ color: "var(--muted-foreground)" }}>Farthest round</p><p>{iv.round}</p></div>
                     <div><p className="mb-0.5 font-mono text-[10px] uppercase" style={{ color: "var(--muted-foreground)" }}>Date</p><p>{iv.date}</p></div>
                   </div>
                 </div>
               ))}
-              <button
-                onClick={() => setVerify(true)}
-                className="w-full font-mono text-[11px] uppercase tracking-[0.12em] py-3 border border-dashed"
-                style={{ borderColor: "var(--border-2)", color: "var(--muted-foreground)" }}
-              >
-                Verify another round
-              </button>
+              {mode === "creative" && (
+                <button
+                  onClick={() => setVerify(true)}
+                  className="w-full font-mono text-[11px] uppercase tracking-[0.12em] py-3 border border-dashed"
+                  style={{ borderColor: "var(--border-2)", color: "var(--muted-foreground)" }}
+                >
+                  Add an interview
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -177,40 +148,19 @@ export default function Profile() {
         <div className="w-full lg:w-64 flex-none overflow-y-auto border-l p-4 space-y-5" style={{ borderColor: "var(--border)" }}>
           <button
             onClick={act}
-            disabled={mode === "vetter" && (refsLeft <= 0 || already)}
-            className="w-full py-[15px] font-mono text-[12px] uppercase tracking-[0.12em] disabled:opacity-[0.38] disabled:cursor-not-allowed active:translate-y-px active:scale-[0.99]"
+            className="w-full py-[15px] font-mono text-[12px] uppercase tracking-[0.12em] active:translate-y-px active:scale-[0.99]"
             style={{ background: "var(--navy)", color: "var(--primary-foreground)" }}
           >
-            {mode === "firm" ? `Contact ${first}` : already ? "Vouched" : "Spend a referral"}
+            {mode === "firm" ? `Contact ${first}` : "Add an interview"}
           </button>
           <p className="font-mono text-[10px] text-center" style={{ color: "var(--ink-3)" }}>
-            {mode === "firm" ? "Direct. No intro brokered." : `${refsLeft} of 3 referrals left.`}
+            {mode === "firm" ? "Direct. No intro brokered." : "One original email. Not the inbox."}
           </p>
 
           <div className="border-t pt-4" style={{ borderColor: "var(--border)" }}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-3" style={{ color: "var(--muted-foreground)" }}>Who vouched</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-3" style={{ color: "var(--muted-foreground)" }}>Proved interviews</p>
             <div className="space-y-2">
-              {candidate.chain.map(([key, w]) => {
-                const vv = VETTERS[key]
-                return (
-                  <div key={key} className="flex items-center gap-2.5">
-                    <span className="w-7 h-7 rounded-full grid place-items-center text-white font-display text-[11px] flex-none" style={{ background: vv.color }}>{vv.initials}</span>
-                    <div className="min-w-0">
-                      <p className="font-display text-[13px] leading-tight">{vv.name}</p>
-                      <p className="font-mono text-[9px] truncate" style={{ color: "var(--muted-foreground)" }}>{vv.role}</p>
-                    </div>
-                    <span className="ml-auto font-mono text-[11px]" style={{ color: "var(--navy)" }}>+{w.toFixed(2)}</span>
-                  </div>
-                )
-              })}
-            </div>
-            <p className="font-mono text-[10px] mt-3" style={{ color: "var(--ink-3)" }}>Primary: {v.name}</p>
-          </div>
-
-          <div className="border-t pt-4" style={{ borderColor: "var(--border)" }}>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-3" style={{ color: "var(--muted-foreground)" }}>Verified rounds</p>
-            <div className="space-y-2">
-              {candidate.interviews.filter(iv => iv.verified).map((iv, i) => (
+              {verified.map((iv, i) => (
                 <div key={i}>
                   <p className="font-display text-[13px]">{iv.company} · {iv.round}</p>
                   <p className="font-mono text-[10px]" style={{ color: "var(--muted-foreground)" }}>{iv.date}</p>
@@ -221,14 +171,13 @@ export default function Profile() {
 
           <div className="border-t pt-4" style={{ borderColor: "var(--border)" }}>
             <div className="flex items-center justify-between mb-3">
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: "var(--muted-foreground)" }}>Record</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em]" style={{ color: "var(--muted-foreground)" }}>Profile</p>
               <span className="font-mono text-[9px]" style={{ color: "var(--muted-foreground)" }}>E/P/{String(4280 + candidate.id).padStart(6, "0")}</span>
             </div>
-            <div className="grid grid-cols-3 text-center border" style={{ borderColor: "var(--border)" }}>
+            <div className="grid grid-cols-2 text-center border" style={{ borderColor: "var(--border)" }}>
               {[
-                { n: candidate.cred.toFixed(2), l: "Cred" },
-                { n: candidate.chain.length, l: "Vouches" },
-                { n: candidate.interviews.filter(i => i.verified).length, l: "Rounds" },
+                { n: works.length, l: "Work" },
+                { n: verified.length, l: "Proved" },
               ].map(s => (
                 <div key={s.l} className="py-3 border-r last:border-r-0" style={{ borderColor: "var(--border)" }}>
                   <p className="font-display text-base">{s.n}</p>

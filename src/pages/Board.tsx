@@ -2,22 +2,9 @@ import { useEffect, useState } from "react"
 import AppNav from "../components/AppNav"
 import Seal from "../components/Seal"
 import VerifyRound from "../components/VerifyRound"
-import { candidates, AESTHETIC_FILTERS, STAGES, VETTERS, type Candidate, type InterviewRound, type Stage } from "../data"
+import { candidates, AESTHETIC_FILTERS, STAGES, publicInterview, type Candidate, type Stage } from "../data"
 import { useRouter } from "../router"
-
-function ResultBadge({ result }: { result: InterviewRound["result"] }) {
-  const color: Record<InterviewRound["result"], string> = {
-    Offer: "#3f5148",
-    Rejected: "var(--navy)",
-    Withdrew: "var(--muted-foreground)",
-    "In Progress": "var(--foreground)",
-  }
-  return (
-    <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide border" style={{ color: color[result], borderColor: "var(--border)" }}>
-      {result}
-    </span>
-  )
-}
+import Desk from "./Desk"
 
 function InterviewModal({ candidate, onClose }: { candidate: Candidate; onClose: () => void }) {
   return (
@@ -30,7 +17,7 @@ function InterviewModal({ candidate, onClose }: { candidate: Candidate; onClose:
       >
         <div className="sticky top-0 border-b px-6 py-4 flex items-center justify-between" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-0.5" style={{ color: "var(--muted-foreground)" }}>Interview record</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-0.5" style={{ color: "var(--muted-foreground)" }}>Interviews on this profile</p>
             <h3 className="font-display text-xl">{candidate.name}</h3>
           </div>
           <button onClick={onClose} className="w-8 h-8 grid place-items-center font-mono text-sm" style={{ color: "var(--muted-foreground)" }}>
@@ -38,19 +25,18 @@ function InterviewModal({ candidate, onClose }: { candidate: Candidate; onClose:
           </button>
         </div>
         <div className="px-6 py-4 space-y-3">
-          {candidate.interviews.map((iv, i) => (
+          {candidate.interviews.filter(i => i.verified).map((iv, i) => (
             <div key={i} className="border p-4" style={{ borderColor: "var(--border)" }}>
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-display text-[15px]">{iv.company}</span>
                     <span className="font-mono text-[10px]" style={{ color: iv.verified ? "var(--navy)" : "var(--ink-3)" }}>
-                      {iv.verified ? "verified" : "unverified"}
+                          {iv.verified ? "email proved" : "listed"}
                     </span>
                   </div>
                   <p className="text-xs mt-0.5" style={{ color: "var(--muted-foreground)" }}>{iv.role}</p>
                 </div>
-                <ResultBadge result={iv.result} />
               </div>
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <div><p className="mb-0.5 font-mono text-[10px] uppercase" style={{ color: "var(--muted-foreground)" }}>Type</p><p>{iv.type}</p></div>
@@ -76,7 +62,7 @@ function PinCard({
   onViewProfile: () => void
 }) {
   const src = candidate.portfolioImages[imageIndex % candidate.portfolioImages.length]
-  const v = VETTERS[candidate.vch]
+  const proof = publicInterview(candidate)
 
   return (
     <article className="relative mb-3 break-inside-avoid group">
@@ -128,12 +114,14 @@ function PinCard({
             className="flex-none font-mono text-[10px] whitespace-nowrap"
             style={{ color: "var(--muted-foreground)" }}
           >
-            {candidate.interviews.length} rounds
+            {candidate.interviews.filter(i => i.verified).length} proved
           </button>
         </div>
-        <p className="font-mono text-[10px] mt-1.5 truncate" style={{ color: "var(--ink-3)" }}>
-          vouched by {v.name}
-        </p>
+        {proof && (
+          <p className="font-mono text-[10px] mt-1.5 truncate" style={{ color: "var(--ink-3)" }}>
+            {proof.company} · {proof.round}
+          </p>
+        )}
       </div>
     </article>
   )
@@ -147,14 +135,14 @@ function Pipeline() {
   return (
     <div className="max-w-[1400px] mx-auto px-5 md:px-7 mt-[22px] mb-[90px]">
       <div className="mb-[18px]">
-        <h2 className="font-display text-[32px] leading-none" style={{ color: "var(--navy)" }}>Signals</h2>
+        <h2 className="font-display text-[32px] leading-none" style={{ color: "var(--navy)" }}>Pipeline</h2>
         <p className="text-[16px] mt-3 max-w-[42ch]" style={{ color: "var(--muted-foreground)" }}>
-          Drag a record along the round. Open anyone to see the work.
+          Your hiring queue. Open anyone to see the work. This is not a ranking.
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {STAGES.map(stage => {
-          const inCol = candidates.filter(c => stages[c.id] === stage).sort((a, b) => b.cred - a.cred)
+          const inCol = candidates.filter(c => stages[c.id] === stage)
           return (
             <div
               key={stage}
@@ -181,7 +169,7 @@ function Pipeline() {
                 <span className="font-mono text-[11px]" style={{ color: "var(--muted-foreground)" }}>{inCol.length}</span>
               </div>
               {inCol.map(c => {
-                const v = VETTERS[c.vch]
+                const proof = publicInterview(c)
                 return (
                   <div
                     key={c.id}
@@ -198,10 +186,11 @@ function Pipeline() {
                   >
                     <div className="font-display text-[15px]">{c.name}</div>
                     <div className="font-mono text-[10px] uppercase tracking-wider mt-0.5" style={{ color: "var(--muted-foreground)" }}>{c.disc}</div>
-                    <div className="flex items-center justify-between mt-2.5">
-                      <span className="font-mono text-[11px]" style={{ color: "var(--muted-foreground)" }}>{v.name.split(" ")[0]}</span>
-                      <span className="font-mono text-[11px]" style={{ color: "var(--navy)" }}>{c.cred.toFixed(2)}</span>
-                    </div>
+                    {proof && (
+                      <div className="font-mono text-[11px] mt-2.5" style={{ color: "var(--navy)" }}>
+                        {proof.company} · {proof.round}
+                      </div>
+                    )}
                   </div>
                 )
               })}
@@ -236,7 +225,7 @@ export default function Board() {
     return words.some(w => hay.includes(w))
   }
 
-  const list = candidates.filter(match).sort((a, b) => b.cred - a.cred)
+  const list = candidates.filter(match)
 
   const pins: { candidate: Candidate; imageIndex: number; key: string }[] = []
   list.forEach(c => {
@@ -255,6 +244,8 @@ export default function Board() {
 
       {wallView === "pipeline" ? (
         <Pipeline />
+      ) : wallView === "desk" ? (
+        <Desk />
       ) : (
         <>
           <section className="max-w-[1440px] mx-auto px-5 md:px-7 pt-10 pb-6">
@@ -262,9 +253,9 @@ export default function Board() {
               The wall.
             </h1>
             <p className="mt-4 text-[17px] max-w-[40ch]" style={{ color: "var(--muted-foreground)" }}>
-              {mode === "vetter"
-                ? "Spend a referral only on work you would put your name on. Open a pin to read the record."
-                : "Open anyone from the work they published. See who vouched, then reach out."}
+              {mode === "creative"
+                ? "This is how employers meet you. Open a pin to add an interview to a profile."
+                : "Open anyone from the work they published. Proven interviews sit next to it."}
             </p>
           </section>
 
@@ -307,13 +298,15 @@ export default function Board() {
             <p className="font-mono text-[11px]" style={{ color: "var(--muted-foreground)" }}>
               {loading ? "Reading the wall." : `${pins.length} pieces · ${list.length} people`}
             </p>
-            <button
-              onClick={() => setVerify(true)}
-              className="mt-3 inline-flex font-mono text-[11px] uppercase tracking-[0.1em]"
-              style={{ color: "var(--navy)" }}
-            >
-              Verify a round
-            </button>
+            {mode === "creative" && (
+              <button
+                onClick={() => setVerify(true)}
+                className="mt-3 inline-flex font-mono text-[11px] uppercase tracking-[0.1em]"
+                style={{ color: "var(--navy)" }}
+              >
+                Add an interview
+              </button>
+            )}
           </div>
 
           <main className="max-w-[1440px] mx-auto px-3 sm:px-5 md:px-7 mt-4 mb-[90px] columns-2 sm:columns-3 md:columns-4 xl:columns-5 gap-3">

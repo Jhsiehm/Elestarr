@@ -5,6 +5,7 @@ import Board from "./pages/Board"
 import Profile from "./pages/Profile"
 import Toast from "./components/Toast"
 import EyeFade from "./components/EyeFade"
+import LandingField from "./components/LandingField"
 
 function Pages() {
   const { page } = useRouter()
@@ -19,7 +20,7 @@ function AppShell() {
   const { page } = useRouter()
   return (
     <>
-      <EyeFade key={page === "landing" ? "hero" : "site"} tone={page === "landing" ? "hero" : "site"} />
+      {page === "landing" ? <LandingField /> : <EyeFade tone="site" />}
       <div className="grain" />
       <div className="vignette" />
       <div className="relative z-[1]">
