@@ -1,4 +1,51 @@
-import { getCandidate } from "./data"
+import { getCandidate, wallPeople, type Candidate } from "./data"
+
+export function rankLiveWall(role: string, people: Candidate[]): DeskMatch[] {
+  const tokens = role.toLowerCase().split(/[^a-z0-9]+/).filter(w => w.length > 3)
+  const live = people.filter(c => c.id >= 9000)
+  const scored = (live.length ? live : people).map(c => {
+    const proved = c.interviews.filter(i => i.verified)
+    const blob = [
+      c.title, c.disc, c.location, c.openTo, c.bio,
+      ...c.skills,
+      ...proved.map(i => `${i.company} ${i.round} ${i.role}`),
+      ...(c.sites ?? []).map(s => s.label),
+    ].join(" ").toLowerCase()
+    const matched = tokens.filter(t => blob.includes(t))
+    const fit = Math.min(96, 48 + matched.length * 8 + (proved.length ? 12 : 0))
+    const company = proved[0]?.company
+    const round = proved[0]?.round
+    const gaps = tokens.filter(t => !blob.includes(t)).slice(0, 2).map(t => `No ${t} on the record`)
+    return {
+      id: c.id,
+      fit,
+      matched: matched.slice(0, 4).map(t => t),
+      gaps: gaps.length ? gaps : ["Chemistry still sits with you"],
+      rationale: company
+        ? `${company} · ${round}. Overlap with this req: ${matched.slice(0, 3).join(", ") || "the work and the loop"}. Prestige is not how we sort.`
+        : "Work is on the wall. Prove a round before we claim overlap.",
+    } satisfies DeskMatch
+  }).sort((a, b) => b.fit - a.fit).slice(0, 6)
+
+  if (scored.length) return scored
+  return rankForRole(role)
+}
+
+export function briefFromPerson(c: Candidate): DeskBrief {
+  const proved = c.interviews.filter(i => i.verified)
+  const first = proved[0]
+  return {
+    alreadyAssessed: first
+      ? [{ competency: first.round, depth: "assessed", format: `${first.company} · ${first.role}` }]
+      : [],
+    safeToSkip: first
+      ? [{ round: "Portfolio screen", redundantWith: `${first.company} already sampled the work through ${first.round}` }]
+      : [],
+    probeInstead: ["How this work behaves inside your company", "The room they have not sat"],
+    neverSkip: ["Team chemistry", "The decision-maker conversation"],
+    outcomeContext: "The result of the last loop stays off the record. Do not infer performance.",
+  }
+}
 
 export type DeskMatch = {
   id: number

@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { loadProfile, proofAddress, proveWithEml } from "../lib/backend"
+import { type EmlParse } from "../lib/eml"
 import { useRouter } from "../router"
 
 const CHECK = (
@@ -7,53 +9,84 @@ const CHECK = (
   </svg>
 )
 
-const STEPS = [
-  { h: "Email received", p: "The original interview message, headers intact. Not a screenshot. Not a forward." },
-  { h: "The mail is authentic", p: "Signed by the company's own mail server. Not rewritten from your address." },
-  { h: "Sender is a real employer", p: "Matched to a known company, not a domain you own." },
-  { h: "This message only", p: "Highest stage named in the email. Nothing else in your inbox is read." },
-]
-
 export default function VerifyRound({
   open,
   onClose,
-  onProved,
+  onStored,
   company,
   round,
+  roleTitle,
+  occurredOn,
 }: {
   open: boolean
   onClose: () => void
-  onProved?: (fact: { company: string; round: string }) => void | Promise<void>
+  onStored?: (fact: { company: string; round: string; proved: boolean }) => void | Promise<void>
   company?: string
   round?: string
+  roleTitle?: string
+  occurredOn?: string
 }) {
-  const { showToast } = useRouter()
-  const [phase, setPhase] = useState<"drop" | "pipe" | "done">("drop")
-  const [step, setStep] = useState(0)
+  const { showToast, accountId } = useRouter()
+  const [phase, setPhase] = useState<"drop" | "reading" | "done">("drop")
   const [hot, setHot] = useState(false)
-  const provedCompany = company?.trim() || "Stripe"
-  const provedRound = round?.trim() || "Final round"
+  const [error, setError] = useState<string | null>(null)
+  const [parse, setParse] = useState<EmlParse | null>(null)
+  const [stored, setStored] = useState<{ company: string; round: string; proved: boolean } | null>(null)
+  const [address, setAddress] = useState(`prove@elestarr.io`)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (!open) {
-      const t = setTimeout(() => { setPhase("drop"); setStep(0) }, 320)
+      const t = setTimeout(() => {
+        setPhase("drop")
+        setParse(null)
+        setStored(null)
+        setError(null)
+      }, 320)
       return () => clearTimeout(t)
     }
   }, [open])
 
   useEffect(() => {
-    if (phase !== "pipe") return
-    if (step >= STEPS.length) {
-      setPhase("done")
-      return
-    }
-    const t = setTimeout(() => setStep(s => s + 1), 820)
-    return () => clearTimeout(t)
-  }, [phase, step])
+    if (!open || !accountId) return
+    void loadProfile(accountId).then(p => {
+      if (p?.proof_token) setAddress(proofAddress(p.proof_token))
+    })
+  }, [open, accountId])
 
   if (!open) return null
 
-  const start = () => { setPhase("pipe"); setStep(0) }
+  const take = async (file: File | undefined) => {
+    if (!file || !accountId) {
+      setError("Drop the original .eml file.")
+      return
+    }
+    setError(null)
+    setPhase("reading")
+    const result = await proveWithEml(accountId, file, {
+      company: company ?? "",
+      round: round ?? "",
+      role_title: roleTitle ?? "",
+      occurred_on: occurredOn ?? "",
+    })
+  if (result.error || !result.parse || !result.fact) {
+      setError(result.error || "Could not read that file.")
+      setPhase("drop")
+      return
+    }
+    setParse(result.parse)
+    setStored({ company: result.fact.company, round: result.fact.round, proved: result.fact.proved })
+    setPhase("done")
+  }
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(address)
+      showToast("Address copied. Forward the original as an attachment.")
+    } catch {
+      showToast(address)
+    }
+  }
 
   return (
     <>
@@ -68,7 +101,7 @@ export default function VerifyRound({
           <div>
             <h3 id="verify-title" className="font-display font-normal text-xl tracking-tight">Add an interview to this profile</h3>
             <p className="text-[12.5px] mt-1.5 max-w-[42ch]" style={{ color: "var(--muted-foreground)" }}>
-              One original interview email. If it is real, the company and how far you got go on this profile. We never ask for the rest of your inbox. We do not publish what they asked.
+              One original interview email. We store that file privately and read the headers. We never ask for the rest of your inbox.
             </p>
           </div>
           <button
@@ -93,7 +126,11 @@ export default function VerifyRound({
                 onDragOver={e => { e.preventDefault(); setHot(true) }}
                 onDragEnter={e => { e.preventDefault(); setHot(true) }}
                 onDragLeave={() => setHot(false)}
-                onDrop={e => { e.preventDefault(); setHot(false); start() }}
+                onDrop={e => {
+                  e.preventDefault()
+                  setHot(false)
+                  void take(e.dataTransfer.files[0])
+                }}
               >
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.6" className="mx-auto mb-2.5">
                   <path d="M12 3v12m0 0 4-4m-4 4-4-4" />
@@ -101,74 +138,80 @@ export default function VerifyRound({
                 </svg>
                 <div className="font-display font-normal text-[15px]">Drop the original email here</div>
                 <p className="text-xs mt-1.5 max-w-[34ch] mx-auto" style={{ color: "var(--muted-foreground)" }}>
-                  In Gmail: open the interview email, click the menu, Show original, Download. Drag that .eml file in.
+                  In Gmail: open the interview email, click the menu, Show original, Download. Drag that .eml file in. It stays private.
                 </p>
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept=".eml,.emlx,message/rfc822"
+                  className="hidden"
+                  onChange={e => { void take(e.target.files?.[0]); e.target.value = "" }}
+                />
                 <button
-                  onClick={start}
+                  onClick={() => inputRef.current?.click()}
                   className="mt-3.5 px-[15px] py-[9px] rounded-[9px] font-mono text-xs text-white active:translate-y-px active:scale-[0.98]"
                   style={{ background: "var(--foreground)" }}
                 >
-                  Use a sample email instead
+                  Choose .eml file
                 </button>
               </div>
               <p className="mt-4 text-[11.5px] leading-relaxed rounded-[10px] px-3.5 py-3" style={{ background: "var(--secondary)", color: "var(--muted-foreground)" }}>
                 Prefer forwarding? Forward the email <b style={{ color: "var(--foreground)" }}>as attachment</b> to{" "}
-                <span className="font-mono" style={{ color: "var(--accent)" }}>verify+a4f9c2@elestarr.io</span>.
-                A normal forward breaks the signature. Do not send take-home files or NDA work. We prove the company and the round from the interview email only. The profile gets that attested round. Not the result. Not the assignment.
+                <button type="button" onClick={() => { void copy() }} className="font-mono" style={{ color: "var(--accent)" }}>
+                  {address}
+                </button>
+                . A normal forward breaks the signature. Do not send take-home files or NDA work.
               </p>
+              {error && <p className="mt-3 text-[13px]" style={{ color: "var(--navy)" }}>{error}</p>}
             </>
           )}
 
-          {(phase === "pipe" || phase === "done") && (
-            <div className="flex flex-col">
-              {STEPS.slice(0, phase === "done" ? STEPS.length : step).map((s, i) => (
-                <div key={s.h} className="flex gap-3 py-3.5 relative wall-card" style={{ animationDelay: "0ms" }}>
-                  {i < STEPS.length - 1 && (
-                    <span className="absolute left-[13px] top-[38px] bottom-[-2px] w-[1.5px]" style={{ background: "var(--border-2)" }} />
+          {phase === "reading" && (
+            <p className="font-mono text-[12px]" style={{ color: "var(--muted-foreground)" }}>
+              Storing the file privately and reading headers.
+            </p>
+          )}
+
+          {phase === "done" && stored && parse && (
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-3 py-2">
+                <div className="flex-none w-[27px] h-[27px] rounded-full grid place-items-center text-white" style={{ background: "var(--accent)" }}>{CHECK}</div>
+                <div>
+                  <h4 className="text-[13.5px] font-medium">File stored privately</h4>
+                  <p className="font-mono text-[11px] mt-0.5" style={{ color: "var(--muted-foreground)" }}>Hiring cannot download it. The profile only gets a fact.</p>
+                </div>
+              </div>
+              <div className="flex gap-3 py-2">
+                <div className="flex-none w-[27px] h-[27px] rounded-full grid place-items-center text-white" style={{ background: parse.authentic ? "var(--accent)" : "var(--navy)" }}>{CHECK}</div>
+                <div>
+                  <h4 className="text-[13.5px] font-medium">{parse.authentic ? "Headers look authentic" : "Stored, not yet proved"}</h4>
+                  <p className="font-mono text-[11px] mt-0.5 leading-relaxed" style={{ color: "var(--muted-foreground)" }}>{parse.note}</p>
+                  {parse.fromAddr && (
+                    <p className="font-mono text-[11px] mt-1" style={{ color: "var(--ink-3)" }}>From {parse.fromAddr}</p>
                   )}
-                  <div
-                    className="flex-none w-[27px] h-[27px] rounded-full grid place-items-center z-[1] text-white"
-                    style={{ background: "var(--accent)" }}
-                  >
-                    {CHECK}
-                  </div>
-                  <div>
-                    <h4 className="text-[13.5px] font-medium">{s.h}</h4>
-                    <p className="font-mono text-[11px] mt-0.5 leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
-                      {s.p.split("PASS")[0]}
-                      {s.p.includes("PASS") && <span style={{ color: "var(--accent)" }}>PASS</span>}
-                      {s.p.includes("PASS") ? s.p.split("PASS")[1] : ""}
-                    </p>
-                  </div>
                 </div>
-              ))}
-              {phase === "done" && (
-                <div className="mt-1.5 rounded-xl border p-[15px] flex items-center gap-3 wall-card" style={{ background: "var(--card)", borderColor: "var(--border)", animationDelay: "80ms" }}>
-                  <div className="w-10 h-10 rounded-full grid place-items-center text-white flex-none" style={{ background: "var(--accent)" }}>
-                    {CHECK}
-                  </div>
-                  <div>
-                    <b className="edn-stamp text-[22px]">{provedRound}, {provedCompany}</b>
-                    <span className="block font-mono text-[11px] mt-0.5" style={{ color: "var(--muted-foreground)" }}>On this profile · email proved</span>
-                  </div>
-                </div>
-              )}
+              </div>
+              <div className="mt-1.5 rounded-xl border p-[15px]" style={{ background: "var(--card)", borderColor: "var(--border)" }}>
+                <b className="edn-stamp text-[22px]">{stored.round}, {stored.company}</b>
+                <span className="block font-mono text-[11px] mt-0.5" style={{ color: "var(--muted-foreground)" }}>
+                  {stored.proved ? "On this profile · email proved" : "On this profile · listed until the signature checks"}
+                </span>
+              </div>
             </div>
           )}
         </div>
 
-        {phase === "done" && (
+        {phase === "done" && stored && (
           <div className="px-[22px] pb-5">
             <button
               className="w-full py-3.5 rounded-xl font-mono text-[13px] text-white active:translate-y-px"
               style={{ background: "var(--accent)" }}
               onClick={() => {
-                void onProved?.({ company: provedCompany, round: provedRound })
-                if (!onProved) showToast("Interview added. It lives on this profile.")
+                void onStored?.(stored)
                 onClose()
               }}
             >
-              Add to profile
+              {stored.proved ? "Add to profile" : "Keep listed on profile"}
             </button>
           </div>
         )}

@@ -1,6 +1,7 @@
-import { useState } from "react"
-import { getCandidate } from "../data"
-import { briefFor, rankForRole, SAMPLE_ROLE, simulateParse, type DeskMatch, type ListingPreview } from "../deskData"
+import { useEffect, useState } from "react"
+import { getCandidate, wallPeople } from "../data"
+import { briefFor, briefFromPerson, rankForRole, rankLiveWall, SAMPLE_ROLE, simulateParse, type DeskMatch, type ListingPreview } from "../deskData"
+import { loadProfile } from "../lib/backend"
 import { useRouter } from "../router"
 
 function FitMark({ n }: { n: number }) {
@@ -12,26 +13,35 @@ function FitMark({ n }: { n: number }) {
 }
 
 function HiringDesk() {
-  const { navigate, contact } = useRouter()
-  const [role, setRole] = useState(SAMPLE_ROLE)
+  const { navigate, contact, accountId, role, wallTick } = useRouter()
+  const [req, setReq] = useState(SAMPLE_ROLE)
   const [phase, setPhase] = useState<"compose" | "reading" | "list">("compose")
   const [matches, setMatches] = useState<DeskMatch[]>([])
   const [active, setActive] = useState<number | null>(null)
 
+  useEffect(() => {
+    if (role !== "firm" || !accountId) return
+    void loadProfile(accountId).then(p => {
+      if (p?.hiring_for.trim()) setReq(p.hiring_for)
+    })
+  }, [accountId, role])
+
   const run = () => {
-    if (!role.trim()) return
+    if (!req.trim()) return
     setPhase("reading")
     setActive(null)
     window.setTimeout(() => {
-      const next = rankForRole(role)
+      void wallTick
+      const live = rankLiveWall(req, wallPeople())
+      const next = live.length ? live : rankForRole(req)
       setMatches(next)
       setActive(next[0]?.id ?? null)
       setPhase("list")
-    }, 720)
+    }, 420)
   }
 
   const person = active != null ? getCandidate(active) : null
-  const brief = active != null ? briefFor(active) : null
+  const brief = person ? (briefFor(person.id) ?? briefFromPerson(person)) : null
   const row = matches.find(m => m.id === active)
 
   return (
@@ -53,8 +63,8 @@ function HiringDesk() {
           The req
         </label>
         <textarea
-          value={role}
-          onChange={e => setRole(e.target.value)}
+          value={req}
+          onChange={e => setReq(e.target.value)}
           rows={4}
           className="w-full bg-transparent outline-none text-[16px] leading-relaxed resize-none"
           style={{ color: "var(--foreground)" }}

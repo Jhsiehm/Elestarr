@@ -1,0 +1,14 @@
+# Edge Functions for Elestarr. Deploy with:
+#   supabase functions deploy parse-proof
+#   supabase functions deploy inbound-mail
+#
+# inbound-mail uses secret-key auth (mail provider webhook).
+# parse-proof uses the signed-in user JWT.
+
+project_id = "cerocddbqhvaffkkqbct"
+
+[functions.parse-proof]
+verify_jwt = true
+
+[functions.inbound-mail]
+verify_jwt = false

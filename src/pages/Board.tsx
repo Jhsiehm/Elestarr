@@ -3,7 +3,6 @@ import AppNav from "../components/AppNav"
 import Seal from "../components/Seal"
 import VerifyRound from "../components/VerifyRound"
 import { AESTHETIC_FILTERS, STAGES, publicInterview, wallPeople, type Candidate, type Stage } from "../data"
-import { addProvedInterview } from "../lib/backend"
 import { useRouter } from "../router"
 import Desk from "./Desk"
 import Listings from "./Listings"
@@ -63,18 +62,33 @@ function PinCard({
   saved: boolean
   onViewProfile: () => void
 }) {
-  const src = candidate.portfolioImages[imageIndex % candidate.portfolioImages.length]
+  const src = candidate.portfolioImages[imageIndex % Math.max(1, candidate.portfolioImages.length)]
   const proof = publicInterview(candidate)
+  const site = candidate.sites?.[0]
 
   return (
     <article className="relative mb-3 break-inside-avoid group">
       <div className="relative overflow-hidden" style={{ background: "var(--secondary)" }}>
-        <img
-          src={src}
-          alt=""
-          className="w-full block object-cover cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
-          onClick={onViewProfile}
-        />
+        {src ? (
+          <img
+            src={src}
+            alt=""
+            className="w-full block object-cover cursor-pointer transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+            onClick={onViewProfile}
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={onViewProfile}
+            className="w-full min-h-[220px] grid place-items-center px-4 text-left"
+            style={{ background: "var(--navy)", color: "var(--primary-foreground)" }}
+          >
+            <span>
+              <span className="block font-display text-[22px] leading-none">{site?.label || candidate.name}</span>
+              <span className="block font-mono text-[10px] uppercase tracking-[0.12em] mt-2 opacity-70">Live site on profile</span>
+            </span>
+          </button>
+        )}
         <div className="absolute inset-0 bg-[#152238]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
         <Seal tier={candidate.tier} size={40} side="left" />
         <div className="absolute top-3 right-3 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200">
@@ -224,7 +238,7 @@ export default function Board() {
     if (filter !== "All" && !c.aestheticTags.some(t => t.toLowerCase().includes(filter.toLowerCase())) && !c.tags.includes(filter)) return false
     const words = (committed.toLowerCase().match(/[a-z]+/g) || [])
     if (!words.length) return true
-    const hay = `${c.tags.join(" ")} ${c.aestheticTags.join(" ")} ${c.disc} ${c.bio} ${c.name}`.toLowerCase()
+    const hay = `${c.tags.join(" ")} ${c.aestheticTags.join(" ")} ${c.disc} ${c.bio} ${c.name} ${(c.sites ?? []).map(s => s.label).join(" ")}`.toLowerCase()
     return words.some(w => hay.includes(w))
   }
 
@@ -233,7 +247,11 @@ export default function Board() {
 
   const pins: { candidate: Candidate; imageIndex: number; key: string }[] = []
   list.forEach(c => {
-    c.portfolioImages.forEach((_, idx) => pins.push({ candidate: c, imageIndex: idx, key: `${c.id}-${idx}` }))
+    if (c.portfolioImages.length) {
+      c.portfolioImages.forEach((_, idx) => pins.push({ candidate: c, imageIndex: idx, key: `${c.id}-${idx}` }))
+    } else {
+      pins.push({ candidate: c, imageIndex: 0, key: `${c.id}-site` })
+    }
   })
 
   useEffect(() => {
@@ -338,14 +356,9 @@ export default function Board() {
       <VerifyRound
         open={verify}
         onClose={() => setVerify(false)}
-        onProved={async fact => {
+        onStored={async fact => {
           if (!accountId || role !== "creative") return
-          const fail = await addProvedInterview(accountId, { ...fact, role_title: "", occurred_on: "" })
-          if (fail) {
-            showToast(fail)
-            return
-          }
-          showToast("Interview added. The result stays private.")
+          showToast(fact.proved ? "Interview proved. The result stays private." : "Email stored privately.")
           await refreshWall()
         }}
       />

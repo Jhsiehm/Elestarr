@@ -4,7 +4,7 @@ import Seal from "../components/Seal"
 import VerifyRound from "../components/VerifyRound"
 import { getCandidate } from "../data"
 import { listingsFor } from "../listings"
-import { addProvedInterview } from "../lib/backend"
+import SiteFrame from "../components/SiteFrame"
 import { useRouter } from "../router"
 
 function twoSentences(text: string) {
@@ -92,9 +92,14 @@ export default function Profile() {
             {candidate.bio ? (
               <p className="text-[15px] leading-relaxed mt-3" style={{ color: "var(--muted-foreground)" }}>{twoSentences(candidate.bio)}</p>
             ) : null}
-            {candidate.available && (
+            {candidate.availability === "conversation" ? (
+              <p className="font-mono text-[10px] uppercase tracking-[0.12em] mt-3" style={{ color: "var(--navy)" }}>Open to conversations</p>
+            ) : candidate.available ? (
               <p className="font-mono text-[10px] uppercase tracking-[0.12em] mt-3" style={{ color: "var(--navy)" }}>Open to work</p>
-            )}
+            ) : null}
+            {candidate.openTo ? (
+              <p className="text-[13px] leading-relaxed mt-2" style={{ color: "var(--muted-foreground)" }}>{candidate.openTo}</p>
+            ) : null}
           </div>
 
           <div>
@@ -122,6 +127,14 @@ export default function Profile() {
         </div>
 
         <div className="flex-1 overflow-y-auto">
+          {(candidate.sites ?? []).map(site => (
+            <div key={site.url} className="border-b p-5 md:p-8" style={{ borderColor: "var(--border)" }}>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-3" style={{ color: "var(--muted-foreground)" }}>
+                Live site{site.label ? ` · ${site.label}` : ""}
+              </p>
+              <SiteFrame url={site.url} label={site.label} tall />
+            </div>
+          ))}
           {piece ? (
             <div className="border-b p-5 md:p-8" style={{ borderColor: "var(--border)" }}>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-2" style={{ color: "var(--muted-foreground)" }}>Selected work</p>
@@ -226,14 +239,9 @@ export default function Profile() {
       <VerifyRound
         open={verify}
         onClose={() => setVerify(false)}
-        onProved={async fact => {
+        onStored={async fact => {
           if (!accountId || role !== "creative") return
-          const fail = await addProvedInterview(accountId, { ...fact, role_title: "", occurred_on: "" })
-          if (fail) {
-            showToast(fail)
-            return
-          }
-          showToast("Interview added. The result stays private.")
+          showToast(fact.proved ? "Interview proved. The result stays private." : "Email stored privately.")
           await refreshWall()
         }}
       />

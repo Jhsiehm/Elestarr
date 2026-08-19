@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "elestarr": {
+      "command": "node",
+      "args": ["mcp/elestarr.mjs"],
+      "env": {
+        "SUPABASE_URL": "https://YOUR_PROJECT.supabase.co",
+        "SUPABASE_SECRET_KEY": "sb_secret_..."
+      }
+    }
+  }
+}

@@ -43,6 +43,9 @@ export type Candidate = {
   specimenH: number
   bio: string
   interviews: InterviewRound[]
+  sites?: { url: string; label: string; sort: number }[]
+  availability?: "open" | "conversation" | "not_looking"
+  openTo?: string
 }
 
 export const VETTERS: Record<string, Vetter> = {
@@ -371,7 +374,7 @@ export function livePeople() {
 }
 
 export function wallPeople() {
-  const live = livePeople().filter(c => c.portfolioImages.length > 0)
+  const live = livePeople().filter(c => c.portfolioImages.length > 0 || (c.sites?.length ?? 0) > 0)
   const demo = candidates.filter(c => !liveById.has(c.id))
   return [...live, ...demo]
 }

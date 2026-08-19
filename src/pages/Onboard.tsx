@@ -1,7 +1,9 @@
 import { useEffect, useState, type ChangeEvent, type InputHTMLAttributes, type ReactNode } from "react"
 import Logo from "../brand"
+import SiteFrame from "../components/SiteFrame"
 import VerifyRound from "../components/VerifyRound"
-import { addProvedInterview, replaceWork, saveBasics, type LiveInterview } from "../lib/backend"
+import { replaceSites, replaceWork, saveAvatar, saveBasics, type Availability, type LiveInterview } from "../lib/backend"
+import { normalizeUrl, validSite } from "../lib/site"
 import { useRouter } from "../router"
 
 function Field({
@@ -37,6 +39,12 @@ function TextInput(props: InputHTMLAttributes<HTMLInputElement>) {
   )
 }
 
+const AVAIL: { id: Availability; label: string }[] = [
+  { id: "open", label: "Open to work" },
+  { id: "conversation", label: "Open to conversations" },
+  { id: "not_looking", label: "Not looking" },
+]
+
 export default function Onboard() {
   const { role, accountId, finishOnboard, browseWall, showToast, refreshWall } = useRouter()
   const hiring = role === "firm"
@@ -47,11 +55,18 @@ export default function Onboard() {
   const [displayName, setDisplayName] = useState("")
   const [title, setTitle] = useState("")
   const [location, setLocation] = useState("")
+  const [availability, setAvailability] = useState<Availability>("open")
+  const [openTo, setOpenTo] = useState("")
+  const [portrait, setPortrait] = useState<File | null>(null)
+  const [portraitUrl, setPortraitUrl] = useState("")
   const [firmName, setFirmName] = useState("")
   const [hiringFor, setHiringFor] = useState("")
 
   const [files, setFiles] = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])
+  const [siteDraft, setSiteDraft] = useState("")
+  const [siteLabel, setSiteLabel] = useState("")
+  const [sites, setSites] = useState<{ url: string; label: string }[]>([])
 
   const [company, setCompany] = useState("")
   const [roleTitle, setRoleTitle] = useState("")
@@ -65,6 +80,16 @@ export default function Onboard() {
     setPreviews(urls)
     return () => { urls.forEach(u => URL.revokeObjectURL(u)) }
   }, [files])
+
+  useEffect(() => {
+    if (!portrait) {
+      setPortraitUrl("")
+      return
+    }
+    const url = URL.createObjectURL(portrait)
+    setPortraitUrl(url)
+    return () => URL.revokeObjectURL(url)
+  }, [portrait])
 
   const pickWork = (e: ChangeEvent<HTMLInputElement>) => {
     const next = [...files, ...Array.from(e.target.files ?? [])].slice(0, 6)
@@ -81,11 +106,16 @@ export default function Onboard() {
     if (!accountId) return "Session expired. Sign in again."
     if (!displayName.trim()) return "Add your name."
     if (!title.trim()) return "Add the title you want next to your work."
-    return saveBasics(accountId, {
+    if (!portrait) return "Add a profile photograph."
+    const basics = await saveBasics(accountId, {
       display_name: displayName.trim(),
       title: title.trim(),
       location: location.trim(),
+      availability,
+      open_to: openTo.trim(),
     })
+    if (basics) return basics
+    return saveAvatar(accountId, portrait)
   }
 
   const saveFirm = async () => {
@@ -102,8 +132,23 @@ export default function Onboard() {
 
   const saveWork = async () => {
     if (!accountId) return "Session expired. Sign in again."
-    if (!files.length) return "Publish at least one piece. Skip will not put someone else's work on your profile."
-    return replaceWork(accountId, files)
+    if (!files.length && !sites.length) return "Publish at least one piece or one live site. Skip will not put someone else's work on your profile."
+    const work = await replaceWork(accountId, files)
+    if (work) return work
+    return replaceSites(accountId, sites)
+  }
+
+  const addSite = () => {
+    setError(null)
+    const url = normalizeUrl(siteDraft)
+    if (!validSite(url)) {
+      setError("Paste a full site, like yourname.com or are.na/you.")
+      return
+    }
+    if (sites.some(s => s.url === url)) return
+    setSites(list => [...list, { url, label: siteLabel.trim() }].slice(0, 6))
+    setSiteDraft("")
+    setSiteLabel("")
   }
 
   const run = async (fn: () => Promise<string | null>, then: () => void) => {
@@ -133,7 +178,7 @@ export default function Onboard() {
       return
     }
     if (!proved.length) {
-      setError("Prove one original interview email before the wall can show how far you got.")
+      setError("Store one original interview email before the wall can show how far you got.")
       return
     }
     void run(async () => null, () => { void finishOnboard("wall") })
@@ -148,25 +193,6 @@ export default function Onboard() {
     setVerify(true)
   }
 
-  const onProved = async (fact: { company: string; round: string }) => {
-    if (!accountId) return
-    const row = {
-      company: fact.company,
-      round: fact.round,
-      role_title: roleTitle.trim(),
-      occurred_on: occurredOn,
-      proved: true as const,
-    }
-    const message = await addProvedInterview(accountId, row)
-    if (message) {
-      setError(message)
-      return
-    }
-    setProved(list => [...list, row])
-    await refreshWall()
-    showToast("Interview added. The result stays private.")
-  }
-
   const kicker = hiring
     ? "Hiring · Onboarding"
     : ["01 · You", "02 · Work", "03 · Interview"][step]
@@ -176,9 +202,9 @@ export default function Onboard() {
   const body = hiring
     ? "You will see the wall from the work. The proved interview only says how far someone already got. Chemistry stays yours."
     : [
-      "This is not Maya's profile. Employers meet you from what you publish here.",
-      "One to six pieces. They open a pin. They do not start from a resume.",
-      "One original email. If it is real, the company and how far you got stay on your profile. The result stays private. So do the questions and the take-home.",
+      "Photograph, title, where you are, what you want next. Employers meet you from this, then the work.",
+      "Images and live sites. Paste a portfolio or project URL and they see the design in a full window. Not a screenshot.",
+      "One original email, stored privately. If the headers are real, the company and how far you got stay on your profile.",
     ][step]
 
   return (
@@ -195,7 +221,7 @@ export default function Onboard() {
       </div>
 
       <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-[520px]">
+        <div className="w-full max-w-[640px]">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] mb-4" style={{ color: "var(--navy)" }}>
             {kicker}
           </p>
@@ -220,6 +246,19 @@ export default function Onboard() {
 
           {!hiring && step === 0 && (
             <>
+              <Field label="Profile photograph">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => setPortrait(e.target.files?.[0] ?? null)}
+                  className="block w-full text-[13px]"
+                />
+              </Field>
+              {portraitUrl && (
+                <div className="mb-5 overflow-hidden border w-28" style={{ borderColor: "var(--border)" }}>
+                  <img src={portraitUrl} alt="" className="w-full h-28 object-cover" />
+                </div>
+              )}
               <Field label="Your name">
                 <TextInput value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder="Your name" autoComplete="name" />
               </Field>
@@ -228,6 +267,28 @@ export default function Onboard() {
               </Field>
               <Field label="Location">
                 <TextInput value={location} onChange={e => setLocation(e.target.value)} placeholder="Berlin, DE" />
+              </Field>
+              <Field label="Availability">
+                <div className="flex flex-wrap gap-2">
+                  {AVAIL.map(opt => (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setAvailability(opt.id)}
+                      className="font-mono text-[11px] uppercase tracking-[0.08em] px-3 py-2 border"
+                      style={{
+                        borderColor: availability === opt.id ? "var(--navy)" : "var(--border)",
+                        background: availability === opt.id ? "var(--navy)" : "transparent",
+                        color: availability === opt.id ? "var(--primary-foreground)" : "var(--navy)",
+                      }}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </Field>
+              <Field label="Open to">
+                <TextInput value={openTo} onChange={e => setOpenTo(e.target.value)} placeholder="Staff brand, identity systems, editorial" />
               </Field>
             </>
           )}
@@ -245,7 +306,7 @@ export default function Onboard() {
                 className="block w-full text-[13px] mb-4"
               />
               {previews.length > 0 && (
-                <div className="grid grid-cols-3 gap-2 mb-3">
+                <div className="grid grid-cols-3 gap-2 mb-6">
                   {previews.map((src, i) => (
                     <button
                       key={src}
@@ -259,8 +320,42 @@ export default function Onboard() {
                   ))}
                 </div>
               )}
-              <p className="font-mono text-[10px]" style={{ color: "var(--ink-3)" }}>
-                Click a piece to remove it. Skip will not copy a demo profile onto yours.
+
+              <p className="font-mono text-[10.5px] uppercase tracking-[0.06em] mb-1.5" style={{ color: "var(--muted-foreground)" }}>
+                Live sites · {sites.length} of 6
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr_140px_auto] gap-2 mb-4">
+                <TextInput value={siteDraft} onChange={e => setSiteDraft(e.target.value)} placeholder="yourname.com" />
+                <TextInput value={siteLabel} onChange={e => setSiteLabel(e.target.value)} placeholder="Portfolio" />
+                <button
+                  type="button"
+                  onClick={addSite}
+                  className="font-mono text-[11px] uppercase tracking-[0.12em] px-4 py-3 border"
+                  style={{ borderColor: "var(--navy)", color: "var(--navy)" }}
+                >
+                  Add
+                </button>
+              </div>
+              <div className="space-y-4">
+                {sites.map(site => (
+                  <div key={site.url}>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="font-mono text-[11px]" style={{ color: "var(--navy)" }}>{site.label || site.url}</p>
+                      <button
+                        type="button"
+                        onClick={() => setSites(list => list.filter(s => s.url !== site.url))}
+                        className="font-mono text-[10px] uppercase tracking-[0.1em]"
+                        style={{ color: "var(--muted-foreground)" }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <SiteFrame url={site.url} label={site.label} />
+                  </div>
+                ))}
+              </div>
+              <p className="font-mono text-[10px] mt-4" style={{ color: "var(--ink-3)" }}>
+                Click a piece to remove it. A live site shows in a full window on the profile.
               </p>
             </div>
           )}
@@ -270,13 +365,11 @@ export default function Onboard() {
               {proved.map(iv => (
                 <p key={`${iv.company}-${iv.round}`} className="font-display font-normal text-[18px] mb-2" style={{ color: "var(--navy)" }}>
                   {iv.company} · {iv.round}
+                  <span className="block font-mono text-[10px] uppercase tracking-[0.12em] mt-1" style={{ color: iv.proved ? "var(--verify)" : "var(--ink-3)" }}>
+                    {iv.proved ? "Email proved" : "Listed · file stored"}
+                  </span>
                 </p>
               ))}
-              {proved.length > 0 && (
-                <p className="font-mono text-[10px] uppercase tracking-[0.12em] mb-6" style={{ color: "var(--verify)" }}>
-                  On this profile · email proved
-                </p>
-              )}
               <Field label="Company">
                 <TextInput value={company} onChange={e => setCompany(e.target.value)} placeholder="Stripe" />
               </Field>
@@ -322,7 +415,13 @@ export default function Onboard() {
         onClose={() => setVerify(false)}
         company={company}
         round={round}
-        onProved={onProved}
+        roleTitle={roleTitle}
+        occurredOn={occurredOn}
+        onStored={async fact => {
+          setProved(list => [...list, { ...fact, role_title: roleTitle, occurred_on: occurredOn }])
+          await refreshWall()
+          showToast(fact.proved ? "Interview proved. The result stays private." : "Email stored. Listed until the signature checks.")
+        }}
       />
     </div>
   )

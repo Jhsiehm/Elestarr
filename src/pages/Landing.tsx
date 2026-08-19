@@ -566,7 +566,7 @@ function BriefWrite() {
     ["Never skip", "Team chemistry", "The decision-maker conversation. The desk does not touch this."],
   ] as const
   const [ref, on] = useInView<HTMLDivElement>(0.32)
-  const [shown, setShown] = useState(blocks.length)
+  const [shown, setShown] = useState<number>(blocks.length)
 
   useEffect(() => {
     if (!on) return
