@@ -4,7 +4,7 @@ export type InterviewRound = {
   role: string
   type: "Full-time" | "Contract" | "Freelance" | "Internship"
   round: string
-  result: "Offer" | "Rejected" | "Withdrew" | "In Progress"
+  result?: "Offer" | "Rejected" | "Withdrew" | "In Progress"
   date: string
   verified: boolean
 }
@@ -356,8 +356,28 @@ export const candidates: Candidate[] = [
   },
 ]
 
+const liveById = new Map<number, Candidate>()
+
+export function registerLive(person: Candidate) {
+  liveById.set(person.id, person)
+}
+
+export function clearLive() {
+  liveById.clear()
+}
+
+export function livePeople() {
+  return [...liveById.values()]
+}
+
+export function wallPeople() {
+  const live = livePeople().filter(c => c.portfolioImages.length > 0)
+  const demo = candidates.filter(c => !liveById.has(c.id))
+  return [...live, ...demo]
+}
+
 export function getCandidate(id: number) {
-  return candidates.find(c => c.id === id) ?? candidates[0]
+  return liveById.get(id) ?? candidates.find(c => c.id === id) ?? candidates[0]
 }
 
 export function publicInterview(c: Candidate) {

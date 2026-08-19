@@ -1,12 +1,35 @@
 import { useEffect, useState } from "react"
+import { cloudConfigured, createAccount, signInAccount } from "../accounts"
 import { useRouter, type Role } from "../router"
 import Logo from "../brand"
-import poster from "../assets/elestarr-poster.png"
+import wallMockup from "../assets/elestarr-wall-mockup.jpg"
 
 export default function Signup() {
-  const { signIn, intent } = useRouter()
+  const { startSession, intent, showToast } = useRouter()
   const [role, setRole] = useState<Role>(intent)
+  const [mode, setMode] = useState<"create" | "enter">("create")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+
   useEffect(() => { setRole(intent) }, [intent])
+
+  const submit = async () => {
+    if (busy) return
+    setError(null)
+    setBusy(true)
+    const fail = mode === "create"
+      ? await createAccount(email, password, role)
+      : await signInAccount(email, password)
+    setBusy(false)
+    if (fail) {
+      setError(fail)
+      return
+    }
+    showToast(mode === "create" ? "Account created." : "Signed in.")
+    await startSession()
+  }
 
   return (
     <div className="min-h-[100dvh] grid lg:grid-cols-[1.05fr_0.95fr]" style={{ background: "transparent", color: "var(--foreground)" }}>
@@ -14,34 +37,44 @@ export default function Signup() {
         className="relative hidden lg:flex items-center justify-center p-8 xl:p-10 border-r"
         style={{ borderColor: "var(--border)", background: "var(--background)" }}
       >
-        <img
-          src={poster}
-          alt="Elestar editorial poster with halftone eye illustration and brand tagline about work and what you look at"
-          className="max-h-full max-w-full w-auto h-auto object-contain"
-        />
+        <figure className="overflow-hidden max-w-full" style={{ background: "var(--card)", boxShadow: "var(--paper-shadow)" }}>
+          <img
+            src={wallMockup}
+            alt="The Elestarr wall. Work first, then the company and farthest proved interview."
+            className="block w-full h-auto"
+            decoding="async"
+          />
+        </figure>
       </div>
 
       <div className="flex items-center justify-center p-8 md:p-10">
-        <div className="w-full max-w-[360px]">
+        <form
+          className="w-full max-w-[360px]"
+          onSubmit={e => { e.preventDefault(); void submit() }}
+        >
           <div className="lg:hidden mb-8">
             <Logo />
           </div>
           <h1 className="edn-lg" style={{ color: "var(--navy)" }}>
-            {role === "creative" ? "I'm a candidate" : "I'm hiring"}
+            {mode === "create" ? "Create an account" : "Sign in"}
           </h1>
           <p className="text-[16px] mt-3" style={{ color: "var(--muted-foreground)" }}>
-            {role === "creative"
-              ? "Show your work. Keep interviews that didn't become a job. One email. Not your whole inbox."
-              : "Look at what they made. Then see how far another company already interviewed them."}
+            {mode === "enter"
+              ? "Come back to the work and the proved round. The result stays private. So does the process."
+              : role === "creative"
+                ? "Show your work. Prove how far you got with one original email. The result stays private. So does the process."
+                : "Look at the work. Then the company and how far they already got. You do not see the rejection, or what they were asked."}
           </p>
 
-          <div className="flex p-[3px] rounded-[10px] border mt-[22px] mb-[18px]" style={{ background: "var(--secondary)", borderColor: "var(--border)" }}>
+          {mode === "create" && (
+          <div className="flex p-[3px] rounded-[10px] border mt-[22px] mb-3" style={{ background: "var(--secondary)", borderColor: "var(--border)" }}>
             {([
               { id: "creative" as const, label: "I'm a candidate" },
               { id: "firm" as const, label: "I'm hiring" },
             ]).map(r => (
               <button
                 key={r.id}
+                type="button"
                 onClick={() => setRole(r.id)}
                 className="flex-1 font-mono text-xs py-[9px] rounded-lg transition-colors"
                 style={{
@@ -53,11 +86,33 @@ export default function Signup() {
               </button>
             ))}
           </div>
+          )}
+
+          <div className={`flex gap-4 mb-[18px] font-mono text-[11px] uppercase tracking-[0.12em] ${mode === "enter" ? "mt-[22px]" : ""}`}>
+            <button
+              type="button"
+              onClick={() => { setMode("create"); setError(null) }}
+              style={{ color: "var(--navy)", opacity: mode === "create" ? 1 : 0.45 }}
+            >
+              Create account
+            </button>
+            <button
+              type="button"
+              onClick={() => { setMode("enter"); setError(null) }}
+              style={{ color: "var(--navy)", opacity: mode === "enter" ? 1 : 0.45 }}
+            >
+              Sign in
+            </button>
+          </div>
 
           <div className="mb-[13px]">
             <label className="block font-mono text-[10.5px] uppercase tracking-[0.06em] mb-1.5" style={{ color: "var(--muted-foreground)" }}>Work email</label>
             <input
               type="email"
+              name="email"
+              autoComplete="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               placeholder="you@studio.com"
               className="w-full border rounded-[10px] px-[13px] py-3 text-sm outline-none"
               style={{ borderColor: "var(--border-2)", background: "var(--card)", color: "var(--foreground)" }}
@@ -69,7 +124,11 @@ export default function Signup() {
             <label className="block font-mono text-[10.5px] uppercase tracking-[0.06em] mb-1.5" style={{ color: "var(--muted-foreground)" }}>Password</label>
             <input
               type="password"
-              placeholder="••••••••"
+              name="password"
+              autoComplete={mode === "create" ? "new-password" : "current-password"}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="At least 8 characters"
               className="w-full border rounded-[10px] px-[13px] py-3 text-sm outline-none"
               style={{ borderColor: "var(--border-2)", background: "var(--card)", color: "var(--foreground)" }}
               onFocus={e => (e.currentTarget.style.borderColor = "var(--accent)")}
@@ -77,17 +136,24 @@ export default function Signup() {
             />
           </div>
 
+          {error && (
+            <p className="text-[13px] mb-3" style={{ color: "var(--navy)" }}>{error}</p>
+          )}
+
           <button
-            onClick={() => signIn(role)}
-            className="w-full mt-2 py-3.5 font-mono text-[13.5px] text-[var(--primary-foreground)] active:translate-y-px active:scale-[0.99]"
+            type="submit"
+            disabled={busy}
+            className="w-full mt-2 py-3.5 font-mono text-[13.5px] text-[var(--primary-foreground)] active:translate-y-px active:scale-[0.99] disabled:opacity-60"
             style={{ background: "var(--navy)" }}
           >
-            Continue
+            {busy ? "Saving…" : mode === "create" ? "Create account" : "Sign in"}
           </button>
-          <p className="font-mono text-[10px] text-center mt-3.5" style={{ color: "var(--ink-3)" }}>
-            Prototype only. No account is created.
+          <p className="font-mono text-[10px] text-center mt-3.5 leading-relaxed" style={{ color: "var(--ink-3)" }}>
+            {cloudConfigured()
+              ? "Employers see company and farthest round. Not the result. Not the assignment."
+              : "No Supabase keys yet, so this account stays on this device. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to save across devices. Employers see company and farthest round. Not the result. Not the assignment."}
           </p>
-        </div>
+        </form>
       </div>
     </div>
   )

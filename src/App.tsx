@@ -9,7 +9,8 @@ import EyeFade from "./components/EyeFade"
 import LandingField from "./components/LandingField"
 
 function Pages() {
-  const { page } = useRouter()
+  const { page, ready } = useRouter()
+  if (!ready) return null
   if (page === "landing") return <Landing />
   if (page === "signup") return <Signup />
   if (page === "onboard") return <Onboard />

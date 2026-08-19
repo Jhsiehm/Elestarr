@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react"
 import { useRouter } from "../router"
 import Logo from "../brand"
+import HeroType from "../components/HeroType"
 import poster from "../assets/elestarr-line-poster.png"
-import wallMockup from "../assets/elestarr-wall-mockup.png"
+import wallMockup from "../assets/elestarr-wall-mockup.jpg"
 import forwardEmail from "../assets/elestarr-forward-email.png"
 
 const PILLARS = ["Work", "Interviews", "Wall", "Desk", "Profile"]
@@ -20,31 +21,115 @@ const MODES = [
   {
     id: "wall",
     title: "Wall",
-    line: "Scroll the work first.",
-    detail: "Open a person when something they made is good. Proven interviews sit next to it.",
+    line: "Look at the work first.",
+    detail: "Open a person when the work is good. The proved interview is on the same card: company and how far they got.",
   },
   {
     id: "pipeline",
     title: "Pipeline",
-    line: "People you are considering.",
-    detail: "Move them as you go. Your hiring queue, not a scoreboard.",
+    line: "Keep the people you might hire.",
+    detail: "Your queue. Not a score. Not a ranking.",
   },
   {
     id: "desk",
     title: "Desk",
     line: "Describe the job in sentences.",
-    detail: "A shortlist of who already matches. Skip interviews they already sat.",
+    detail: "A shortlist of who already matches. Then which rounds you can skip because they already sat them.",
   },
 ] as const
 
 const HOW_STEPS: [string, string, string][] = [
-  ["01", "Name the interview", "Company, job, date, and how far you got. Nothing else."],
-  ["02", "Send that email", "Upload the original interview email, or forward it as an attachment. We never ask for the rest of your inbox."],
-  ["03", "It goes on your profile", "If the email is real, your profile shows the company and how far you got. Rejections stay private."],
+  ["01", "Name the interview", "Company, role, date, and how far you got. Nothing else."],
+  ["02", "Send that email", "The original interview email, as a file or forwarded as an attachment. Not a screenshot. Not the take-home."],
+  ["03", "It goes on your profile", "If the email is real, employers see the company and the farthest round next to your work. Rejections stay private. We never show what they asked, or why you left."],
 ]
 
 function prefersReduce() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+}
+
+const HERO_PROOF = "Maya Okonkwo · Figma final · email proved"
+
+function HeroRecord({ armed = true }: { armed?: boolean }) {
+  const show = armed || prefersReduce()
+  return (
+    <div className="mt-10 min-h-[1.75rem]" aria-live="polite">
+      {show && (
+        <p
+          className="hero-record-live seal-in flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-[11px] uppercase tracking-[0.14em]"
+          style={{ color: "var(--ink-3)" }}
+        >
+          <span>{HERO_PROOF}</span>
+          <span
+            className="inline-block font-mono text-[10px] uppercase tracking-[0.16em] px-2 py-1 border"
+            style={{ color: "var(--verify)", borderColor: "var(--verify)" }}
+          >
+            Mail verified
+          </span>
+        </p>
+      )}
+      <p
+        className="hero-record-static flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-[11px] uppercase tracking-[0.14em]"
+        style={{ color: "var(--ink-3)" }}
+      >
+        <span>{HERO_PROOF}</span>
+        <span
+          className="inline-block font-mono text-[10px] uppercase tracking-[0.16em] px-2 py-1 border"
+          style={{ color: "var(--verify)", borderColor: "var(--verify)" }}
+        >
+          Mail verified
+        </span>
+      </p>
+    </div>
+  )
+}
+
+function TypeOn({
+  text,
+  className = "",
+  style,
+  ms = 52,
+}: {
+  text: string
+  className?: string
+  style?: CSSProperties
+  ms?: number
+}) {
+  const [ref, on] = useInView<HTMLHeadingElement>(0.38)
+  const [n, setN] = useState(() => (prefersReduce() ? text.length : 0))
+
+  useEffect(() => {
+    if (!on) return
+    if (prefersReduce()) {
+      setN(text.length)
+      return
+    }
+    setN(0)
+    let i = 0
+    let t = 0
+    const tick = () => {
+      i += 1
+      setN(i)
+      if (i >= text.length) return
+      const extra = text[i - 1] === "." ? 280 : 0
+      t = window.setTimeout(tick, ms + extra)
+    }
+    t = window.setTimeout(tick, 90)
+    return () => window.clearTimeout(t)
+  }, [on, text, ms])
+
+  return (
+    <h2 ref={ref} className={className} style={style}>
+      <span className="visually-hidden">{text}</span>
+      <span className="type-on" aria-hidden="true">
+        <span className="type-on-ghost">{text}</span>
+        <span className="type-on-live">
+          {text.slice(0, n)}
+          {n < text.length && <span className="caret" />}
+        </span>
+      </span>
+    </h2>
+  )
 }
 
 function useInView<T extends HTMLElement = HTMLElement>(threshold = 0.32) {
@@ -97,7 +182,9 @@ function ProductChrome() {
     <figure className="overflow-hidden" style={{ background: "var(--card)", boxShadow: "var(--paper-shadow)" }}>
       <img
         src={wallMockup}
-        alt="Elestarr wall. Work first, with proved interviews on each person."
+        alt="The Elestarr wall. Each person shows their work, then the company and farthest proved interview."
+        width={1024}
+        height={576}
         className="block w-full h-auto"
         loading="lazy"
         decoding="async"
@@ -164,12 +251,17 @@ function ProveIt() {
   return (
     <section id="how" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
       <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
+        <TypeOn
+          text="Forward one interview email. Not your inbox."
+          className="edn-scene max-w-[18ch] mb-4"
+          style={{ color: "var(--navy)" }}
+        />
         <Reveal>
-          <h2 className="edn-scene max-w-[16ch] mb-4" style={{ color: "var(--navy)" }}>
-            One interview email. Never the rest of your inbox.
-          </h2>
-          <p className="text-[18px] leading-relaxed max-w-[42ch] mb-14" style={{ color: "var(--muted-foreground)" }}>
-            Send the interview email you already have. If it is real, your profile shows how far you got. We do not grade you. We do not read anything else.
+          <p className="text-[18px] leading-relaxed max-w-[42ch] mb-6" style={{ color: "var(--muted-foreground)" }}>
+            If that email is real, your profile shows the company, how far you got, and the date. That is public. The result stays private. So do the questions and the take-home.
+          </p>
+          <p className="text-[16px] leading-relaxed max-w-[42ch] mb-14" style={{ color: "var(--muted-foreground)" }}>
+            Do not send take-home files or NDA work. We prove the loop from the interview email, not the assignment.
           </p>
         </Reveal>
         <ProcessSteps
@@ -181,7 +273,7 @@ function ProveIt() {
             >
               <img
                 src={forwardEmail}
-                alt="Forward an interview email to prove@elestarr.ai. Company, role, round, and date are parsed. The rest of the inbox stays private."
+                alt="Forward the original interview email as an attachment. Elestarr reads that message only."
                 className="block w-full h-auto"
                 loading="lazy"
                 decoding="async"
@@ -256,11 +348,13 @@ function DualLedger() {
     <section ref={ref} id="signals" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
       <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
         <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16 items-end mb-12">
-          <h2 className="edn-scene max-w-[14ch]" style={{ color: "var(--navy)" }}>
-            If you don't get the job, those interviews disappear.
-          </h2>
+          <TypeOn
+            text="You sat four rounds. You didn't get the job. LinkedIn shows none of it."
+            className="edn-scene max-w-[16ch]"
+            style={{ color: "var(--navy)" }}
+          />
           <p className="text-[18px] leading-relaxed max-w-[40ch]" style={{ color: "var(--muted-foreground)" }}>
-            Four interviews. No job. LinkedIn shows none of it. If the original email is real, your profile keeps how far you got.
+            Elestarr keeps the company and the farthest round, from the original email. That is what the next hiring team can see.
           </p>
         </div>
         <div className="grid md:grid-cols-2 gap-px" style={{ background: "var(--border)" }}>
@@ -338,14 +432,13 @@ function SignalPrinter() {
         className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28 grid lg:grid-cols-[1fr_0.9fr] gap-12 lg:gap-20 items-center"
       >
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--navy)" }}>
-            What goes on the profile
-          </p>
-          <h2 className="edn-scene mb-5 max-w-[16ch]" style={{ color: "var(--navy)" }}>
-            Not a score. Proof of an interview.
-          </h2>
+          <TypeOn
+            text="Figma. Final. Email proved. Not a score."
+            className="edn-scene mb-5 max-w-[16ch]"
+            style={{ color: "var(--navy)" }}
+          />
           <p className="text-[17px] leading-relaxed max-w-[38ch]" style={{ color: "var(--muted-foreground)" }}>
-            Company, how far you got, and that the email checked out. Employers see that next to your work. That is all we claim.
+            Employers see the company, how far you got, and that the original email checked out. Next to your work. That is all we claim.
           </p>
         </div>
         <div className="relative overflow-hidden border px-7 py-8 min-h-[320px] flex flex-col" style={{ borderColor: "var(--navy)", background: "color-mix(in srgb, var(--background) 88%, var(--card))" }}>
@@ -401,12 +494,14 @@ function ModeStage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--navy)" }}>If you are hiring</p>
-            <h2 className="edn-scene max-w-[16ch]" style={{ color: "var(--navy)" }}>
-              The wall, then your queue, then the desk.
-            </h2>
+            <TypeOn
+              text="See the work. Skip the round they already sat."
+              className="edn-scene max-w-[16ch]"
+              style={{ color: "var(--navy)" }}
+            />
           </div>
           <p className="text-[17px] max-w-[34ch]" style={{ color: "var(--muted-foreground)" }}>
-            Same people. You decide from the work. Proven interviews only tell you how far another company already took them.
+            You hire from what they made. The proved interview only says another company already took them that far. You can skip that round. You still do chemistry. We never show why they left, or what that loop tested.
           </p>
         </div>
         <div className="relative">
@@ -517,17 +612,17 @@ function DeskPitch({ onOpen }: { onOpen: () => void }) {
     <section id="desk" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
       <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
         <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-20 items-end mb-14">
-          <Reveal>
-            <h2 className="edn-scene max-w-[14ch]" style={{ color: "var(--navy)" }}>
-              Skip interviews they already did.
-            </h2>
-          </Reveal>
+          <TypeOn
+            text="Skip interviews they already did."
+            className="edn-scene max-w-[14ch]"
+            style={{ color: "var(--navy)" }}
+          />
           <Reveal delay={80}>
             <p className="text-[18px] leading-relaxed max-w-[44ch]" style={{ color: "var(--muted-foreground)" }}>
-              Describe the job in a few sentences. You get a short list: what already matches, and what is still missing. After you say yes to an intro, you get a note of which interviews you can skip.
+              Describe the job. You get who already matches, and what is still missing. After an intro, you see which rounds you can skip.
             </p>
             <p className="text-[16px] leading-relaxed max-w-[44ch] mt-5" style={{ color: "var(--muted-foreground)" }}>
-              It never invents an interview they did not do. It suggests. You decide.
+              It never invents an interview they did not do. You decide.
             </p>
           </Reveal>
         </div>
@@ -564,19 +659,21 @@ function Bridge() {
   return (
     <section ref={ref} id="you" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
       <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
+        <TypeOn
+          text="You are not hiring a Stripe employee. You are finding the person Stripe already took to final."
+          className="edn-scene max-w-[18ch] mb-6"
+          style={{ color: "var(--navy)" }}
+        />
         <Reveal>
-          <h2 className="edn-scene max-w-[18ch] mb-6" style={{ color: "var(--navy)" }}>
-            The next company can start later.
-          </h2>
           <p className="text-[18px] leading-relaxed max-w-[44ch]" style={{ color: "var(--muted-foreground)" }}>
-            A startup may never hire someone away from Stripe. It can still find the person Stripe independently took to final.
+            The work is on their profile. The proved interview is next to it. The next company can start later.
           </p>
         </Reveal>
         <div className="mt-16 grid md:grid-cols-[1fr_auto_1fr] gap-8 md:gap-6 items-center">
           <div className="border p-7 md:p-9" style={{ borderColor: "var(--border-2)" }}>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--ink-3)" }}>If you are a candidate</p>
             <p className="edn-lg mb-3" style={{ color: "var(--navy)" }}>Those weeks still count.</p>
-            <p className="text-[16px]" style={{ color: "var(--muted-foreground)" }}>The interviews live on your profile. The next company can see how far you already got.</p>
+            <p className="text-[16px]" style={{ color: "var(--muted-foreground)" }}>The next company sees the company and how far you got. Not the rejection.</p>
           </div>
           <div className="hidden md:flex flex-col items-center w-28 px-3" aria-hidden="true">
             <div
@@ -609,7 +706,7 @@ function Bridge() {
           <div className="border p-7 md:p-9" style={{ borderColor: "var(--border-2)" }}>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--ink-3)" }}>If you are an employer</p>
             <p className="edn-lg mb-3" style={{ color: "var(--navy)" }}>Someone already pressure-tested.</p>
-            <p className="text-[16px]" style={{ color: "var(--muted-foreground)" }}>You are not poaching a Stripe employee. You are finding the person they already interviewed to a final, from the work on their profile.</p>
+            <p className="text-[16px]" style={{ color: "var(--muted-foreground)" }}>See the work. Skip the round they already sat. Chemistry is yours. We do not publish the process.</p>
           </div>
         </div>
       </div>
@@ -620,6 +717,8 @@ function Bridge() {
 export default function Landing() {
   const { navigate, signedIn, setWallView, setIntent, dark, toggleDark } = useRouter()
   const [solidNav, setSolidNav] = useState(false)
+  const [issued, setIssued] = useState(() => prefersReduce())
+  const [pull, setPull] = useState(0)
 
   useEffect(() => {
     const hero = document.getElementById("enter")
@@ -627,6 +726,28 @@ export default function Landing() {
     const io = new IntersectionObserver(([e]) => setSolidNav(!e.isIntersecting), { threshold: 0.45 })
     io.observe(hero)
     return () => io.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (prefersReduce()) return
+    const hero = document.getElementById("enter")
+    if (!hero) return
+    let raf = 0
+    const measure = () => {
+      const r = hero.getBoundingClientRect()
+      const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height * 0.62)))
+      setPull(p)
+    }
+    const onScroll = () => {
+      window.cancelAnimationFrame(raf)
+      raf = window.requestAnimationFrame(measure)
+    }
+    measure()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      window.cancelAnimationFrame(raf)
+    }
   }, [])
   const goHire = () => {
     setIntent("firm")
@@ -689,42 +810,27 @@ export default function Landing() {
         </div>
       </nav>
 
-      <section id="enter" className="min-h-[calc(100dvh-4rem)] flex flex-col justify-center max-w-[1440px] mx-auto px-5 md:px-8 py-8 md:py-10 text-center">
-        <div className="hero-center">
-        <h1
-          className="fade-up text-balance mx-auto max-w-[14ch] md:max-w-[16ch]"
-          style={{ color: "var(--navy)", animationDelay: "0.18s" }}
-        >
-          <span className="edn-xl block">Show the work.</span>
-          <span className="edn-lg block mt-4 md:mt-5">Keep the interviews that didn't become a job.</span>
-        </h1>
+      <section id="enter" className="min-h-[calc(100dvh-4rem)] flex flex-col justify-center py-8 md:py-10 text-center">
         <div
-          className="rule-draw mx-auto mt-7 h-px w-16"
-          style={{ background: "var(--navy)" }}
+          className="hero-type-pull px-4 md:px-6"
+          style={{
+            opacity: 1 - pull * 0.72,
+            transform: `translate3d(0, ${pull * -42}px, 0)`,
+            clipPath: pull > 0.02 ? `inset(0 0 ${pull * 68}% 0)` : undefined,
+          } as CSSProperties}
+        >
+          <HeroType onDone={() => setIssued(true)} />
+        </div>
+        <div className="hero-center max-w-[1440px] mx-auto px-5 md:px-8">
+        <div
+          className="rule-draw mx-auto mt-8 h-px w-16"
+          style={{ background: "var(--navy)", opacity: issued ? 1 : 0.35 }}
           aria-hidden="true"
         />
         <div
-          className="fade-up mt-8 md:mt-10 mx-auto grid md:grid-cols-2 gap-6 md:gap-x-16 max-w-[40rem] text-left"
-          style={{ animationDelay: "0.48s" }}
+          className="hero-actions mt-8 md:mt-10 flex flex-wrap items-center justify-center gap-3 md:gap-4"
+          data-ready={issued ? "" : undefined}
         >
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-2" style={{ color: "var(--ink-3)" }}>
-              Candidate
-            </p>
-            <p className="text-[16px] md:text-[17px] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
-              Post the work. Prove one interview with the original email. Not the inbox.
-            </p>
-          </div>
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-2" style={{ color: "var(--ink-3)" }}>
-              Employer
-            </p>
-            <p className="text-[16px] md:text-[17px] leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
-              Look at the work first. Then see how far they already got. Skip that round.
-            </p>
-          </div>
-        </div>
-        <div className="fade-up mt-8 md:mt-10 flex flex-wrap items-center justify-center gap-3 md:gap-4" style={{ animationDelay: "0.6s" }}>
           <button
             type="button"
             onClick={goList}
@@ -740,9 +846,7 @@ export default function Landing() {
             I'm hiring
           </button>
         </div>
-        <p className="fade-up mt-5 font-mono text-[11px] uppercase tracking-[0.14em]" style={{ color: "var(--ink-3)", animationDelay: "0.72s" }}>
-          Maya Okonkwo · reached a Figma final · email proved
-        </p>
+        <HeroRecord armed={issued} />
         </div>
       </section>
 
@@ -750,12 +854,14 @@ export default function Landing() {
 
       <section id="work" className="scroll-mt-24 border-b" style={{ borderColor: "var(--border)" }}>
         <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
+          <TypeOn
+            text="The work is first. The proved interview is next to it."
+            className="edn-scene mb-6 max-w-[18ch]"
+            style={{ color: "var(--navy)" }}
+          />
           <Reveal>
-            <h2 className="edn-scene mb-6 max-w-[16ch]" style={{ color: "var(--navy)" }}>
-              Work first. Then the interview that stayed.
-            </h2>
             <p className="text-[18px] leading-relaxed max-w-[42ch] mb-12 md:mb-14" style={{ color: "var(--muted-foreground)" }}>
-              Employers meet you here. The work is first. How far a company already took you sits next to it, if the email is real.
+              Maya's work is on the wall. Next to it: Figma, final, proved from the original email. That is what employers see.
             </p>
           </Reveal>
           <ProductChrome />
@@ -781,10 +887,10 @@ export default function Landing() {
                 letterSpacing: "-0.045em",
               }}
             >
-              Bring one interview email.
+              Forward one interview email.
             </h2>
             <p className="mt-4 text-[16px] max-w-[40ch]" style={{ opacity: 0.78 }}>
-              Candidates: it goes on your profile. Employers: you see it next to the work.
+              Your profile shows the company and how far you got. Hiring teams see it next to the work, and can skip that round. They never see the result, or the assignment.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 self-start md:self-auto">

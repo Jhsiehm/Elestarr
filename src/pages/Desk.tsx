@@ -234,7 +234,7 @@ function ListingDesk() {
           </h1>
         </div>
         <p className="text-[16px] leading-relaxed max-w-[42ch]" style={{ color: "var(--muted-foreground)" }}>
-          Describe interviews you sat, including the company. We will not invent a round. The company can be public. The rejection is not.
+          Describe interviews you sat, including the company. We will not invent a round. The company can be public. The rejection is not. Neither is what they asked.
         </p>
       </div>
 

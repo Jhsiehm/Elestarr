@@ -4,8 +4,9 @@ import { listingsFor, type CandidateListing } from "../listings"
 import { useRouter } from "../router"
 
 export default function Listings() {
-  const { profileId, showToast, setWallView, navigate } = useRouter()
-  const person = getCandidate(profileId)
+  const { profileId, ownProfileId, showToast, setWallView, navigate, wallTick } = useRouter()
+  const person = getCandidate(ownProfileId ?? profileId)
+  void wallTick
   const proved = person.interviews.filter(iv => iv.verified)
   const rows = listingsFor(person)
   const [open, setOpen] = useState<string | null>(rows[0]?.id ?? null)

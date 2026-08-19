@@ -1,0 +1,281 @@
+DAY 3  ·  ELESTARR
+Paste this whole file into the teleprompter.
+Read only SAY.
+Do LOOK and CLICK first. Wait one beat after every CLICK.
+
+
+SETUP  (do not read)
+Unsigned. Landing page. Light mode.
+Click path:
+  Landing  →  Interviews
+  I'm a candidate  →  continue
+  Onboard 01 Continue
+  Onboard 02 Continue
+  Onboard 03 Open listings
+  Click Stripe
+  How employers see you
+  Stop.
+
+
+--------------------------------
+1
+LANDING
+--------------------------------
+
+LOOK
+  Wordmark.
+  Headline.
+
+SAY
+  Last video looked like two products.
+  Prompto. Then a Pinterest for designers.
+  Wrong.
+  Prompto is parked.
+  This week is Elestarr.
+
+LOOK
+  Show the work.
+  Keep the interviews that didn't become a job.
+
+SAY
+  One idea.
+  We do not screen you with another company's rejection.
+  We do not grade you.
+  We keep the round you already sat.
+  Work is how you get found.
+  The interview on the profile is the product.
+
+LOOK
+  Left. Candidate.
+  Right. Employer.
+
+SAY
+  Candidate. Post the work. Prove one interview with the original email. Not the inbox.
+  Employer. Look at the work first. Then see how far they already got. Skip that round.
+
+
+--------------------------------
+2
+INTERVIEWS
+--------------------------------
+
+CLICK
+  Interviews.
+  Wait for the words to tick.
+
+LOOK
+  Left. Today.
+  Apply. Technical. Panel. Final. Gone.
+
+SAY
+  If you don't get the job those interviews disappear.
+  LinkedIn shows none of it.
+
+LOOK
+  Right. On Elestarr.
+  Same loop. Last word. Kept.
+
+SAY
+  Rejections stay private.
+  What can sit on the profile is the company and how far you got.
+  If the original email is real.
+  Not a marketplace. Not an AI recruiter.
+  Company. Stage. Mail verified.
+
+
+--------------------------------
+3
+CANDIDATE SIGN IN
+--------------------------------
+
+CLICK
+  I'm a candidate.
+  Stay on I'm a candidate.
+  Continue.
+
+LOOK
+  Poster on the left.
+  I'm a candidate on the right.
+
+SAY
+  Today I built the candidate side.
+  Sign in. Then three beats.
+  Work. Interviews. Roles.
+
+
+--------------------------------
+4
+ONBOARD 01  WORK
+--------------------------------
+
+LOOK
+  01 Work.
+  Your work is already on the wall.
+  Pieces live. Maya.
+
+SAY
+  This is why it looked like Pinterest.
+  Employers meet you from the work.
+  They do not start from a resume.
+  The wall is the door. Not the product.
+
+CLICK
+  Continue.
+
+
+--------------------------------
+5
+ONBOARD 02  INTERVIEWS
+--------------------------------
+
+LOOK
+  02 Interviews.
+  Keep the loops that did not become a job.
+  The companies and rounds already on the profile.
+  Email proved.
+
+SAY
+  One original email.
+  If it is real the company and how far you got stay.
+  Rejections stay private.
+  That is the original idea. Still.
+
+CLICK
+  Continue.
+  Do not click Add another.
+
+
+--------------------------------
+6
+ONBOARD 03  ROLES
+--------------------------------
+
+LOOK
+  03 Roles.
+  Listings appear from what was already assessed.
+  Roles overlap the loops on your profile.
+
+SAY
+  We do not rank you.
+  We name the overlap with a job. And the gap.
+  Prestige is not how we sort.
+  Listings unlock after a proved loop. Not after you upload pretty pictures.
+
+CLICK
+  Open listings.
+
+
+--------------------------------
+7
+LISTINGS
+--------------------------------
+
+LOOK
+  Roles that already overlap.
+  Matched from interviews on your profile.
+
+SAY
+  This is not a job board dump.
+  These roles exist because a loop on the profile already overlaps them.
+
+CLICK
+  Stripe. Staff Brand Designer.
+
+LOOK
+  From your record. Figma. Final.
+  Overlap.
+  Gap.
+  They can skip.
+  They still do.
+
+SAY
+  Stripe needs identity already taken to a final.
+  Your Figma loop did that.
+  They can skip the portfolio screen.
+  They still do team chemistry.
+  We never show why you left.
+
+CLICK
+  Share your profile. Stripe.
+
+LOOK
+  The toast.
+  They see the work and the proved loop. Not the rejection.
+
+SAY
+  That is the candidate product.
+  Prove a round. Then share it toward a role that already fits.
+
+
+--------------------------------
+8
+HOW EMPLOYERS SEE YOU
+--------------------------------
+
+CLICK
+  How employers see you.
+  You land on the wall.
+
+LOOK
+  The masonry.
+  Do not search. Do not filter.
+
+SAY
+  Ten seconds. This is the door.
+  Hiring falls for the work. Then they see the round.
+
+
+--------------------------------
+9
+CLOSE
+--------------------------------
+
+LOOK
+  Stay on the wall. Or go back to the wordmark.
+
+SAY
+  Day 3.
+  One idea. Branded. Clickable.
+  Candidate path is live. Onboarding. Listings. No score.
+  This week.
+  Ten candidates who will prove a round.
+  One company I ask head-on what would stop them from using it.
+
+STOP
+  Don't keep clicking.
+
+
+--------------------------------
+IF THEY ASK  (off camera)
+--------------------------------
+
+Marketplace?
+  Without the email it is just a wall.
+  Listings do not unlock until a proved loop.
+  The email is the product.
+
+Prompto?
+  Side build. Not this week.
+
+Is it live?
+  Demo data. Real loop.
+  Next. Ten people. One company.
+
+Why not AI recruiting?
+  They don't trust a score.
+  We prove one email. Then they decide.
+
+
+--------------------------------
+PASTE INTO EF
+--------------------------------
+
+Day 3: not a marketplace pivot. Elestarr is still
+prove the round you already sat. Work is the door.
+Candidate path shipped: onboard in three beats
+(work, interviews, roles), then listings matched
+to proved loops. Overlap and gap. No score.
+Rejections private. Prompto parked. Branded
+prototype. Goal: 10 candidates on the app.
+1 company in conversation, asked why they
+wouldn't use it.

@@ -2,7 +2,8 @@ import { useEffect, useState } from "react"
 import AppNav from "../components/AppNav"
 import Seal from "../components/Seal"
 import VerifyRound from "../components/VerifyRound"
-import { candidates, AESTHETIC_FILTERS, STAGES, publicInterview, type Candidate, type Stage } from "../data"
+import { AESTHETIC_FILTERS, STAGES, publicInterview, wallPeople, type Candidate, type Stage } from "../data"
+import { addProvedInterview } from "../lib/backend"
 import { useRouter } from "../router"
 import Desk from "./Desk"
 import Listings from "./Listings"
@@ -132,6 +133,7 @@ function Pipeline() {
   const { stages, setStage, showToast, navigate } = useRouter()
   const [dragId, setDragId] = useState<number | null>(null)
   const [hot, setHot] = useState<Stage | null>(null)
+  const people = wallPeople()
 
   return (
     <div className="max-w-[1400px] mx-auto px-5 md:px-7 mt-[22px] mb-[90px]">
@@ -143,7 +145,7 @@ function Pipeline() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {STAGES.map(stage => {
-          const inCol = candidates.filter(c => stages[c.id] === stage)
+          const inCol = people.filter(c => (stages[c.id] ?? c.stage) === stage)
           return (
             <div
               key={stage}
@@ -158,7 +160,7 @@ function Pipeline() {
                 e.preventDefault()
                 setHot(null)
                 if (dragId == null) return
-                const c = candidates.find(x => x.id === dragId)
+                const c = people.find(x => x.id === dragId)
                 if (c && stages[c.id] !== stage) {
                   setStage(c.id, stage)
                   showToast(`${c.name.split(" ")[0]} moved to <span class="font-mono text-xs" style="color:var(--accent-ink)">${stage}</span>`)
@@ -209,7 +211,7 @@ function Pipeline() {
 }
 
 export default function Board() {
-  const { navigate, wallView, mode } = useRouter()
+  const { navigate, wallView, mode, accountId, role, refreshWall, showToast, wallTick } = useRouter()
   const [query, setQuery] = useState("")
   const [committed, setCommitted] = useState("")
   const [filter, setFilter] = useState("All")
@@ -226,7 +228,8 @@ export default function Board() {
     return words.some(w => hay.includes(w))
   }
 
-  const list = candidates.filter(match)
+  const list = wallPeople().filter(match)
+  void wallTick
 
   const pins: { candidate: Candidate; imageIndex: number; key: string }[] = []
   list.forEach(c => {
@@ -301,7 +304,7 @@ export default function Board() {
             <p className="font-mono text-[11px]" style={{ color: "var(--muted-foreground)" }}>
               {loading ? "Reading the wall." : `${pins.length} pieces · ${list.length} people`}
             </p>
-            {mode === "creative" && (
+            {role === "creative" && (
               <button
                 onClick={() => setVerify(true)}
                 className="mt-3 inline-flex font-mono text-[11px] uppercase tracking-[0.1em]"
@@ -332,7 +335,20 @@ export default function Board() {
         </>
       )}
 
-      <VerifyRound open={verify} onClose={() => setVerify(false)} />
+      <VerifyRound
+        open={verify}
+        onClose={() => setVerify(false)}
+        onProved={async fact => {
+          if (!accountId || role !== "creative") return
+          const fail = await addProvedInterview(accountId, { ...fact, role_title: "", occurred_on: "" })
+          if (fail) {
+            showToast(fail)
+            return
+          }
+          showToast("Interview added. The result stays private.")
+          await refreshWall()
+        }}
+      />
       {modal && <InterviewModal candidate={modal} onClose={() => setModal(null)} />}
     </div>
   )

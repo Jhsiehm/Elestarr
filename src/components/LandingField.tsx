@@ -17,8 +17,12 @@ export default function LandingField() {
 
   return (
     <div className="land-field" data-stage={stage} aria-hidden="true">
-      <img className="land-eye" src={eye} alt="" decoding="async" />
-      <img className="land-eye land-eye-scan" src={eye} alt="" decoding="async" />
+      {stage === "page" && (
+        <>
+          <img className="land-eye" src={eye} alt="" decoding="async" />
+          <img className="land-eye land-eye-scan" src={eye} alt="" decoding="async" />
+        </>
+      )}
       <img className="land-face" src={portrait} alt="" decoding="async" />
       <img className="land-face eye-lit" src={portrait} alt="" decoding="async" />
     </div>

@@ -4,6 +4,7 @@ import Seal from "../components/Seal"
 import VerifyRound from "../components/VerifyRound"
 import { getCandidate } from "../data"
 import { listingsFor } from "../listings"
+import { addProvedInterview } from "../lib/backend"
 import { useRouter } from "../router"
 
 function twoSentences(text: string) {
@@ -12,13 +13,14 @@ function twoSentences(text: string) {
 }
 
 export default function Profile() {
-  const { navigate, profileId, workIndex, mode, contact, setWallView } = useRouter()
+  const { navigate, profileId, workIndex, mode, contact, setWallView, ownProfileId, accountId, role, refreshWall, showToast, wallTick } = useRouter()
   const candidate = getCandidate(profileId)
+  void wallTick
   const [verify, setVerify] = useState(false)
   const [selected, setSelected] = useState(workIndex)
   const verified = candidate.interviews.filter(iv => iv.verified)
   const roles = listingsFor(candidate)
-  const mine = mode === "creative"
+  const mine = Boolean(ownProfileId && ownProfileId === candidate.id && mode === "creative")
 
   const works = useMemo(() => candidate.portfolioImages.map((img, i) => ({
     id: i,
@@ -37,8 +39,10 @@ export default function Profile() {
     if (mode === "firm") {
       contact(candidate.name)
       navigate("board")
-    } else {
+    } else if (mine) {
       setVerify(true)
+    } else {
+      navigate("board")
     }
   }
 
@@ -85,7 +89,9 @@ export default function Profile() {
           <div>
             <h1 className="font-display font-normal text-[28px] leading-[1.05]" style={{ color: "var(--navy)", letterSpacing: "-0.03em" }}>{candidate.name}</h1>
             <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] mt-1.5" style={{ color: "var(--navy)" }}>{candidate.title}</p>
-            <p className="text-[15px] leading-relaxed mt-3" style={{ color: "var(--muted-foreground)" }}>{twoSentences(candidate.bio)}</p>
+            {candidate.bio ? (
+              <p className="text-[15px] leading-relaxed mt-3" style={{ color: "var(--muted-foreground)" }}>{twoSentences(candidate.bio)}</p>
+            ) : null}
             {candidate.available && (
               <p className="font-mono text-[10px] uppercase tracking-[0.12em] mt-3" style={{ color: "var(--navy)" }}>Open to work</p>
             )}
@@ -116,7 +122,7 @@ export default function Profile() {
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          {piece && (
+          {piece ? (
             <div className="border-b p-5 md:p-8" style={{ borderColor: "var(--border)" }}>
               <p className="font-mono text-[10px] uppercase tracking-[0.16em] mb-2" style={{ color: "var(--muted-foreground)" }}>Selected work</p>
               <h2 className="font-display font-normal text-[32px] md:text-[40px] leading-none mb-1" style={{ color: "var(--navy)", letterSpacing: "-0.03em" }}>{piece.title}</h2>
@@ -128,6 +134,10 @@ export default function Profile() {
                 {twoSentences(candidate.bio)}
               </p>
             </div>
+          ) : (
+            <div className="border-b p-5 md:p-8" style={{ borderColor: "var(--border)" }}>
+              <p className="text-[16px]" style={{ color: "var(--muted-foreground)" }}>No work published yet.</p>
+            </div>
           )}
 
           <div className="p-5 md:p-8">
@@ -136,7 +146,7 @@ export default function Profile() {
               Company and how far they got. The email is proved. Rejections stay off the public record.
             </p>
             <div className="space-y-3">
-              {(mode === "firm" ? verified : candidate.interviews).map((iv, i) => (
+              {(mine ? candidate.interviews : verified).map((iv, i) => (
                 <div key={i} className="border p-4" style={{ borderColor: "var(--border)" }}>
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
@@ -155,7 +165,7 @@ export default function Profile() {
                   </div>
                 </div>
               ))}
-              {mode === "creative" && (
+              {mine && (
                 <button
                   onClick={() => setVerify(true)}
                   className="w-full font-mono text-[11px] uppercase tracking-[0.12em] py-3 border border-dashed"
@@ -174,10 +184,10 @@ export default function Profile() {
             className="w-full py-[15px] font-mono text-[12px] uppercase tracking-[0.12em] active:translate-y-px active:scale-[0.99]"
             style={{ background: "var(--navy)", color: "var(--primary-foreground)" }}
           >
-            {mode === "firm" ? `Contact ${first}` : "Add an interview"}
+            {mode === "firm" ? `Contact ${first}` : mine ? "Add an interview" : "Back to the wall"}
           </button>
           <p className="font-mono text-[10px] text-center" style={{ color: "var(--ink-3)" }}>
-            {mode === "firm" ? "Direct. No intro brokered." : "One original email. Not the inbox."}
+            {mode === "firm" ? "Direct. No intro brokered." : mine ? "One original email. Not the inbox." : "Company and farthest round. Not the result."}
           </p>
 
           <div className="border-t pt-4" style={{ borderColor: "var(--border)" }}>
@@ -213,7 +223,20 @@ export default function Profile() {
         </div>
       </div>
 
-      <VerifyRound open={verify} onClose={() => setVerify(false)} />
+      <VerifyRound
+        open={verify}
+        onClose={() => setVerify(false)}
+        onProved={async fact => {
+          if (!accountId || role !== "creative") return
+          const fail = await addProvedInterview(accountId, { ...fact, role_title: "", occurred_on: "" })
+          if (fail) {
+            showToast(fail)
+            return
+          }
+          showToast("Interview added. The result stays private.")
+          await refreshWall()
+        }}
+      />
     </div>
   )
 }

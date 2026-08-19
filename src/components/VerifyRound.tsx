@@ -14,11 +14,25 @@ const STEPS = [
   { h: "This message only", p: "Highest stage named in the email. Nothing else in your inbox is read." },
 ]
 
-export default function VerifyRound({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function VerifyRound({
+  open,
+  onClose,
+  onProved,
+  company,
+  round,
+}: {
+  open: boolean
+  onClose: () => void
+  onProved?: (fact: { company: string; round: string }) => void | Promise<void>
+  company?: string
+  round?: string
+}) {
   const { showToast } = useRouter()
   const [phase, setPhase] = useState<"drop" | "pipe" | "done">("drop")
   const [step, setStep] = useState(0)
   const [hot, setHot] = useState(false)
+  const provedCompany = company?.trim() || "Stripe"
+  const provedRound = round?.trim() || "Final round"
 
   useEffect(() => {
     if (!open) {
@@ -54,7 +68,7 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
           <div>
             <h3 id="verify-title" className="font-display font-normal text-xl tracking-tight">Add an interview to this profile</h3>
             <p className="text-[12.5px] mt-1.5 max-w-[42ch]" style={{ color: "var(--muted-foreground)" }}>
-              One original email. If it is real, the interview goes on this profile. We never ask for the rest of your inbox.
+              One original interview email. If it is real, the company and how far you got go on this profile. We never ask for the rest of your inbox. We do not publish what they asked.
             </p>
           </div>
           <button
@@ -100,7 +114,7 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
               <p className="mt-4 text-[11.5px] leading-relaxed rounded-[10px] px-3.5 py-3" style={{ background: "var(--secondary)", color: "var(--muted-foreground)" }}>
                 Prefer forwarding? Forward the email <b style={{ color: "var(--foreground)" }}>as attachment</b> to{" "}
                 <span className="font-mono" style={{ color: "var(--accent)" }}>verify+a4f9c2@elestarr.io</span>.
-                A normal forward breaks the signature; forward as attachment keeps it intact.
+                A normal forward breaks the signature. Do not send take-home files or NDA work. We prove the company and the round from the interview email only. The profile gets that attested round. Not the result. Not the assignment.
               </p>
             </>
           )}
@@ -134,7 +148,7 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
                     {CHECK}
                   </div>
                   <div>
-                    <b className="edn-stamp text-[22px]">Final round, Stripe</b>
+                    <b className="edn-stamp text-[22px]">{provedRound}, {provedCompany}</b>
                     <span className="block font-mono text-[11px] mt-0.5" style={{ color: "var(--muted-foreground)" }}>On this profile · email proved</span>
                   </div>
                 </div>
@@ -148,7 +162,11 @@ export default function VerifyRound({ open, onClose }: { open: boolean; onClose:
             <button
               className="w-full py-3.5 rounded-xl font-mono text-[13px] text-white active:translate-y-px"
               style={{ background: "var(--accent)" }}
-              onClick={() => { showToast("Interview added. It lives on this profile."); onClose() }}
+              onClick={() => {
+                void onProved?.({ company: provedCompany, round: provedRound })
+                if (!onProved) showToast("Interview added. It lives on this profile.")
+                onClose()
+              }}
             >
               Add to profile
             </button>
