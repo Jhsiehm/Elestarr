@@ -1,6 +1,9 @@
 {
-  "title": "Elestarr",
-  "description": "Find people by what they make. Work first, verified Signals attached.",
+  "title": "Elestar",
+  "description": "Elestar checks one original interview email, then posts the company and the farthest round. Never the outcome.",
+  "openGraph": {
+    "image": "/elestar-mark.jpg"
+  },
   "robots": {
     "index": false
   },

@@ -1,31 +1,50 @@
-import { RouterProvider, useRouter } from "./router"
+import { RouterProvider, useRouter, type Page } from "./router"
 import Landing from "./pages/Landing"
+import Candidates from "./pages/Candidates"
+import Hiring from "./pages/Hiring"
 import Signup from "./pages/Signup"
 import Board from "./pages/Board"
 import Profile from "./pages/Profile"
 import Onboard from "./pages/Onboard"
+import Info from "./pages/Info"
+import NotFound from "./pages/NotFound"
 import Toast from "./components/Toast"
-import EyeFade from "./components/EyeFade"
-import LandingField from "./components/LandingField"
+
+const INFO: Page[] = [
+  "verification",
+  "privacy",
+  "terms",
+  "security",
+  "faq",
+  "pricing",
+  "about",
+  "contact",
+  "careers",
+  "nda",
+  "remove",
+  "publish",
+  "access",
+  "walkthrough",
+]
 
 function Pages() {
   const { page, ready } = useRouter()
   if (!ready) return null
   if (page === "landing") return <Landing />
+  if (page === "candidates") return <Candidates />
+  if (page === "hiring") return <Hiring />
   if (page === "signup") return <Signup />
   if (page === "onboard") return <Onboard />
   if (page === "board") return <Board />
   if (page === "profile") return <Profile />
-  return null
+  if (page === "notfound") return <NotFound />
+  if (INFO.includes(page)) return <Info />
+  return <NotFound />
 }
 
 function AppShell() {
-  const { page } = useRouter()
   return (
     <>
-      {page === "landing" ? <LandingField /> : <EyeFade tone="site" />}
-      <div className="grain" />
-      <div className="vignette" />
       <div className="relative z-[1]">
         <Pages />
       </div>

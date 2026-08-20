@@ -2,8 +2,9 @@ import { createContext, useContext, useState, useEffect, useCallback, type React
 import { clearSession, getActiveSession, markOnboarded, subscribeAuth, type SessionAccount } from "./accounts"
 import { candidates, type Stage } from "./data"
 import { hydrateLive, wallId } from "./lib/backend"
+import { hrefFor, isPublicPage, pageFromLocation, type SitePage } from "./lib/paths"
 
-export type Page = "landing" | "signup" | "board" | "profile" | "onboard"
+export type Page = SitePage
 export type Role = "firm" | "creative"
 export type Mode = Role
 export type WallView = "wall" | "pipeline" | "desk" | "listings"
@@ -128,11 +129,32 @@ export function RouterProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let alive = true
     void (async () => {
-      await hydrate(true)
-      if (alive) setReady(true)
+      const urlPage = pageFromLocation()
+      const acc = await getActiveSession()
+      applyAccount(acc, setters, { land: false })
+      await hydrateLive(acc ? { userId: acc.userId, role: acc.role } : null)
+      if (!alive) return
+      if (urlPage && isPublicPage(urlPage)) setPage(urlPage)
+      else if (acc && !acc.onboarded) setPage("onboard")
+      else if (urlPage === "board" || urlPage === "profile" || urlPage === "onboard") setPage(urlPage)
+      else if (acc) {
+        setWallView("wall")
+        setPage("board")
+      } else setPage("landing")
+      setWallTick(n => n + 1)
+      setReady(true)
     })()
     const unsub = subscribeAuth(() => { void hydrate(false) })
-    return () => { alive = false; unsub() }
+    const onPop = () => {
+      const next = pageFromLocation()
+      if (next) setPage(next)
+    }
+    window.addEventListener("popstate", onPop)
+    return () => {
+      alive = false
+      unsub()
+      window.removeEventListener("popstate", onPop)
+    }
   }, [hydrate])
 
   useEffect(() => {
@@ -154,6 +176,9 @@ export function RouterProvider({ children }: { children: ReactNode }) {
     if (work != null) setWorkIndex(work)
     else if (id != null) setWorkIndex(0)
     setPage(p)
+    const href = hrefFor(p)
+    const here = `${window.location.pathname}${window.location.search}`
+    if (here !== href) window.history.pushState({ page: p }, "", href)
   }
 
   const spendReferral = (id: number) => {
@@ -169,6 +194,9 @@ export function RouterProvider({ children }: { children: ReactNode }) {
 
   const startSession = async () => {
     await hydrate(true)
+    const acc = await getActiveSession()
+    const next = acc ? (acc.onboarded ? "board" : "onboard") : "landing"
+    window.history.pushState({ page: next }, "", hrefFor(next))
   }
 
   const refreshWall = async () => {
@@ -184,11 +212,13 @@ export function RouterProvider({ children }: { children: ReactNode }) {
     if (ownProfileId != null) setProfileId(ownProfileId)
     setWallView(next)
     setPage("board")
+    window.history.pushState({ page: "board" }, "", hrefFor("board"))
   }
 
   const browseWall = () => {
     setWallView("wall")
     setPage("board")
+    window.history.pushState({ page: "board" }, "", hrefFor("board"))
   }
 
   const signOut = () => {
@@ -201,6 +231,7 @@ export function RouterProvider({ children }: { children: ReactNode }) {
     setOwnProfileId(null)
     setWallView("wall")
     setPage("landing")
+    window.history.pushState({ page: "landing" }, "", hrefFor("landing"))
   }
 
   return (

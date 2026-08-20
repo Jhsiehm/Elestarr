@@ -1,0 +1,91 @@
+/* Elestar tokens. One file. Light print stock. */
+
+:root {
+  --stock: #f2f1ed;
+  --ink: #16161a;
+  --ink-mid: #5a5a62;
+  --rule: #d6d4cc;
+  --verify: #0c8f45;
+
+  --background: var(--stock);
+  --foreground: var(--ink);
+  --card: var(--stock);
+  --card-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-hover: #2a2a30;
+  --primary-foreground: var(--stock);
+  --secondary: var(--stock);
+  --secondary-foreground: var(--ink);
+  --muted: var(--stock);
+  --muted-foreground: var(--ink-mid);
+  --accent: var(--ink);
+  --accent-ink: var(--ink);
+  --accent-foreground: var(--stock);
+  --border: var(--rule);
+  --border-2: #b8b6ae;
+  --ring: var(--ink);
+  --navy: var(--ink);
+  --navy-light: color-mix(in srgb, var(--ink) 8%, var(--stock));
+  --ink-3: var(--ink-mid);
+  --wall: var(--stock);
+  --radius: 0px;
+  --paper-shadow: none;
+
+  --measure: 62ch;
+  --gutter: 20px;
+  --nav-h: 56px;
+  --section-y: 48px;
+
+  --t-display-0: clamp(2.35rem, 7vw, 5.5rem);
+  --t-display-1: clamp(1.85rem, 4.4vw, 4.25rem);
+  --t-display-2: clamp(1.35rem, 3.1vw, 2.05rem);
+  --t-display-3: clamp(1.02rem, 1.7vw, 1.22rem);
+  --t-mono-1: 0.8125rem;
+  --t-mono-2: 0.875rem;
+  --t-mono-3: 0.6875rem;
+
+  --font-serif: "PP Editorial New", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 28px;
+    --section-y: 64px;
+    --nav-h: 60px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 40px;
+    --section-y: 96px;
+  }
+}
+
+html.dark {
+  --stock: #f2f1ed;
+  --ink: #16161a;
+  --ink-mid: #5a5a62;
+  --rule: #d6d4cc;
+  --verify: #0c8f45;
+  --background: var(--stock);
+  --foreground: var(--ink);
+  --card: var(--stock);
+  --card-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-hover: #2a2a30;
+  --primary-foreground: var(--stock);
+  --secondary: var(--stock);
+  --muted-foreground: var(--ink-mid);
+  --accent: var(--ink);
+  --accent-ink: var(--ink);
+  --accent-foreground: var(--stock);
+  --border: var(--rule);
+  --border-2: #b8b6ae;
+  --ring: var(--ink);
+  --navy: var(--ink);
+  --navy-light: color-mix(in srgb, var(--ink) 8%, var(--stock));
+  --ink-3: var(--ink-mid);
+  --wall: var(--stock);
+}

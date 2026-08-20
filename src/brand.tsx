@@ -1,22 +1,19 @@
-import wordmark from "./assets/elestarr-wordmark.png"
+import lockup from "./assets/elestar-logo.svg?raw"
+
+const HEIGHT = { sm: 28, md: 32, lg: 40 } as const
 
 export default function Logo({
   size = "md",
-  invert = false,
 }: {
   size?: "sm" | "md" | "lg"
   invert?: boolean
 }) {
-  const h = size === "lg" ? 48 : size === "sm" ? 26 : 38
-
+  const h = HEIGHT[size]
   return (
-    <span className="inline-flex items-center">
-      <img
-        src={wordmark}
-        alt="Elestarr"
-        className={`logo-mark flex-none ${invert ? "logo-mark-on-dark" : ""}`}
-        style={{ height: h, width: "auto" }}
-      />
-    </span>
+    <span
+      className={`logo logo-${size}`}
+      style={{ height: h }}
+      dangerouslySetInnerHTML={{ __html: lockup }}
+    />
   )
 }
