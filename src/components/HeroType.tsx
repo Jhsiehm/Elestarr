@@ -7,11 +7,13 @@ function prefersReduce() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
 }
 
-function pauseAfter(ch: string) {
-  if (ch === ".") return 520
-  if (ch === ",") return 200
-  return 0
-}
+const TYPE_MS = 2000
+const LEAD_START = 40
+const SUB_GAP = 80
+const CHAR_MS = Math.max(
+  8,
+  Math.round((TYPE_MS - LEAD_START - SUB_GAP) / Math.max(1, LEAD.length + SUB.length - 2)),
+)
 
 function useTypewriter(text: string, ms: number, armed: boolean, startDelay = 240) {
   const [n, setN] = useState(() => (prefersReduce() ? text.length : 0))
@@ -29,7 +31,7 @@ function useTypewriter(text: string, ms: number, armed: boolean, startDelay = 24
       i += 1
       setN(i)
       if (i >= text.length) return
-      t = window.setTimeout(tick, ms + pauseAfter(text[i - 1]))
+      t = window.setTimeout(tick, ms)
     }
     t = window.setTimeout(tick, startDelay)
     return () => window.clearTimeout(t)
@@ -46,9 +48,9 @@ export default function HeroType({ onDone }: { onDone?: () => void }) {
   const textRef = useRef<SVGTextElement>(null)
   const caretRef = useRef<SVGRectElement>(null)
 
-  const leadN = useTypewriter(LEAD, 118, ready, 280)
+  const leadN = useTypewriter(LEAD, CHAR_MS, ready, LEAD_START)
   const leadDone = leadN >= LEAD.length
-  const subN = useTypewriter(SUB, 62, ready && (reduce || leadDone), 640)
+  const subN = useTypewriter(SUB, CHAR_MS, ready && (reduce || leadDone), SUB_GAP)
   const subDone = subN >= SUB.length
   const sent = useRef(false)
 
@@ -113,15 +115,15 @@ export default function HeroType({ onDone }: { onDone?: () => void }) {
       >
         <text
           ref={textRef}
-          x="0"
-          y="0.92em"
+          x={span > 0 ? span / 2 : "50%"}
+          y="0.88em"
           fill="currentColor"
           xmlSpace="preserve"
+          textAnchor="middle"
           fontFamily='"PP Editorial New", Fraunces, serif'
           fontWeight="200"
           fontSize="1em"
-          textLength={span > 0 ? span : undefined}
-          lengthAdjust="spacing"
+          letterSpacing="-0.05em"
         >
           {LEAD.split("").map((ch, i) => (
             <tspan key={`${ch}-${i}`} fillOpacity={i < leadN ? 1 : 0}>
@@ -137,7 +139,7 @@ export default function HeroType({ onDone }: { onDone?: () => void }) {
           opacity="0"
         />
       </svg>
-      <span className="hero-type-sub edn-lg" aria-hidden="true">
+      <span className="hero-type-sub" aria-hidden="true">
         <span className="type-on">
           <span className="type-on-ghost" aria-hidden="true">{SUB}</span>
           <span className="type-on-live">

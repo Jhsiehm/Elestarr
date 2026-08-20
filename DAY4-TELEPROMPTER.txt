@@ -2,21 +2,18 @@ DAY 4  ·  ELESTARR
 Paste this whole file into the teleprompter.
 Read only SAY.
 Do LOOK and CLICK first. Wait one beat after every CLICK.
+This cut is about three minutes. Do not walk the whole app.
 
 
 SETUP  (do not read)
-Unsigned. Landing page. Light mode. Top of page.
-Do not sign in unless a beat says CLICK.
-Scroll. Do not rush the typewriter.
+Unsigned. Landing. Light mode. Top of page.
+Do not type a password on camera.
 Click path:
-  Stay on landing.
   Wait for the headline to finish.
-  Scroll Work.
-  Scroll Interviews.
-  Scroll How.
-  Scroll Hiring.
-  Stop on the navy close.
-  Do not open I'm a candidate.
+  Scroll to Work. Wait for the line.
+  Scroll to How.
+  I'm a candidate.
+  Stop. Do not Create account.
 
 
 --------------------------------
@@ -28,24 +25,19 @@ LOOK
   Wordmark.
   Wait for the type.
   Prove how far you got.
-  The line under it.
 
 SAY
-  Day 3 looked like a product.
-  It still talked like two.
-  Work wall. Then interview proof. Then hiring.
-  Three rooms. Same house. Hard to say in one breath.
+  Yesterday's video froze, so this is the recut.
+  I want to show what actually changed today, and answer the notes we got.
 
 LOOK
-  Subline.
-  Show the work. Forward the interview email.
-  The next company can skip that round.
+  The line under the headline.
 
 SAY
-  Today we made it one sentence.
-  Prove how far you got.
-  Work first. Original email. Next company starts later.
-  That is the product. Still.
+  Elestarr is still one idea.
+  You show the work. You forward the original interview email.
+  If that email is real, the next company can see how far you already got, and skip that round.
+  We do not grade you. We do not turn a rejection into a profile.
 
 
 --------------------------------
@@ -55,22 +47,23 @@ ANDREW
 
 LOOK
   Stay on the hero.
-  Mail verified. Maya. Figma final.
+  Maya Okonkwo. Figma final. Mail verified.
 
 SAY
-  Andrew Forbes. Product designer at Figma.
-  He sat with Barney's mock. The agent. And this prototype.
-  Not a like. A look.
+  Today Andrew Forbes sat with us. He is a product designer at Figma.
+  He looked at Barney's design with the mock agent, and he looked at this prototype.
+  His feedback was not "add more."
+  He said the page had to feel like one product, and it had to speak to the person who would actually use it, not to us.
 
 LOOK
-  Do not click I'm a candidate.
-  Do not click I'm hiring.
+  Do not click yet.
 
 SAY
-  His note was cohesion.
-  Say it to the person who would actually use it.
-  Not to us.
-  We already knew the idea. The page was still showing off.
+  That is what we rewrote.
+  The headline is now the product: prove how far you got.
+  He also asked whether we should start only with UX and UI designers.
+  We have not decided. Designers are an obvious first wall, because the work is visual and the loops are hard.
+  We are not locking a niche until a hiring person tells us they would actually use it.
 
 
 --------------------------------
@@ -87,36 +80,15 @@ LOOK
   The wall mockup.
 
 SAY
-  This is what he meant.
-  Employers meet the work. Then Figma. Final. Email proved.
-  Not a gallery with a hiring tool taped on.
-  One card. Both facts.
+  This is the cohesion change.
+  Employers meet the person from what they made.
+  Next to that work they see the company, the farthest round, and that the original email checked out.
+  One card. Not a moodboard with a hiring tool taped on.
 
 
 --------------------------------
 4
-INTERVIEWS
---------------------------------
-
-CLICK
-  Scroll to Interviews.
-  Wait for Today and On Elestarr.
-
-LOOK
-  Left. Today. Apply. Technical. Panel. Final. Gone.
-  Right. On Elestarr. Same loop. Kept.
-
-SAY
-  LinkedIn still shows none of this.
-  We keep the company and the farthest round.
-  If the original email is real.
-  Rejections stay private.
-  That did not change.
-
-
---------------------------------
-5
-HOW
+THE TRUST NOTE
 --------------------------------
 
 CLICK
@@ -126,112 +98,77 @@ CLICK
 LOOK
   01 Name the interview.
   02 Send that email.
-  The forward.
   03 It goes on your profile.
 
 SAY
-  Direct. Because that is the ask.
-  One email. As a file. Or forwarded as an attachment.
-  Not a screenshot. Not the take-home. Not the inbox.
-  If it is real it sits next to the work.
+  A few of you were worried that "keep the interviews that didn't become a job" sounds like we extract a company's process after a rejection and hand it to the next firm.
+  That reading is fair. That is not what we are building.
+
+LOOK
+  The line about rejections, and what they asked.
+
+SAY
+  What can sit on a profile is a fact: this company, this farthest round, proved from the original email.
+  The result stays private. So do the questions, the take-home, and why the loop ended.
+  We do not publish what a company tests for. We do not redistribute the assignment.
+  We are also not a content-creator play. The work on the wall is how you get found. The email is how a round becomes a fact.
+
+LOOK
+  Stay in How.
+
+SAY
+  I do not have proof yet that hiring teams are comfortable with that fact. That is the real question, and I am taking it this week instead of talking past it.
+
+
+--------------------------------
+5
+WHAT SHIPPED
+--------------------------------
+
+CLICK
+  I'm a candidate.
+  Stop on Create an account.
+
+LOOK
+  The wall on the left. Not the eye.
+  Create account. Sign in.
+
+SAY
+  Someone said the first image felt like a horror poster. That was the eye.
+  It is off the first frame. This is the wall, which is the actual product.
+
+LOOK
+  The copy under Create an account.
+
+SAY
+  Create account works now. You can come back on this device.
+  The old line is gone from signup.
+  What shipped today is the rewritten landing, the privacy language, the quieter first frame, and a real account instead of a fake Continue button.
 
 
 --------------------------------
 6
-WHO  ·  NOT DECIDED
---------------------------------
-
-LOOK
-  Stay in How. Or the poster if it is on screen.
-  Do not sell a pivot.
-
-SAY
-  Andrew asked if we should start narrower.
-  UX and UI designers.
-  Visual work. Hard loops. The wall already looks like them.
-
-LOOK
-  Do not nod like it is locked.
-
-SAY
-  We did not decide.
-  It is a wedge. Not a ceiling.
-  If we name a niche before we hear hiring, we are guessing.
-
-
---------------------------------
-7
-HIRING
---------------------------------
-
-CLICK
-  Scroll to Hiring.
-  See the work. Skip the round they already sat.
-
-LOOK
-  Wall. Pipeline. Desk.
-  Three things that exist in the app.
-  Not three metaphors.
-
-SAY
-  Same sentence from the other side.
-  You hire from what they made.
-  The proved interview only says another company already took them that far.
-  You can skip that round. You still do chemistry.
-  We never show why they left.
-
-
---------------------------------
-8
-PEOPLE
---------------------------------
-
-LOOK
-  Navy close. Or the wordmark.
-  Stop scrolling.
-
-SAY
-  Today I also wrote Caroline Kerr.
-  Recruiter. Crypto company.
-  Asked what she actually thinks of a place like that.
-  She said Thursday.
-
-LOOK
-  Stay put.
-
-SAY
-  That is not a customer yet.
-  That is a hiring person who will look at this and say if it is real.
-  Andrew saw the build. Caroline hears the job.
-  We need both.
-
-
---------------------------------
-9
 CLOSE
 --------------------------------
 
 LOOK
-  Forward one interview email.
-  I'm a candidate. I'm hiring.
-  Do not click them.
+  Stay on this screen.
+  Do not submit.
 
 SAY
-  Day 4.
-  One sentence. On the page.
-  A Figma designer looked at both builds.
-  A recruiter is on the calendar.
+  Tomorrow David is in meetings.
+  We are going to ask Andrew for a proper call, not just the look he already gave us.
+  We are putting Barney's agents into this prototype, so the two builds are one thing people can click.
+  We are also putting Elestarr on LinkedIn, so this page has somewhere to point.
 
 LOOK
-  Wordmark.
+  Wordmark, or the create-account heading.
 
 SAY
-  Tomorrow.
-  David is in rooms.
-  We ask Andrew for a proper call.
-  Barney's agents come into this prototype.
-  We put Elestarr on LinkedIn so the page has somewhere to point.
-  Thursday I sit with Caroline and ask what would stop her using it.
+  Thursday I sit with Caroline Kerr. She is a recruiter. She already agreed to talk.
+  I am going to ask her the hostile version: would you let a rejected candidate show they reached your final, and would you hire off that fact from another company.
+  If she says no, we know. If she says yes, we have the first piece of evidence the feedback asked for.
+  That is Day 4. One sentence on the page. Accounts. Then we go get the answer from hiring.
 
 STOP
   Don't keep clicking.
@@ -241,46 +178,39 @@ STOP
 IF THEY ASK  (off camera)
 --------------------------------
 
-Did Andrew say ship to designers only?
-  He asked if the first users should be UX and UI.
-  We did not lock it.
-  Designers are the obvious first wall. Hiring still has to want them.
+Moat / creators?
+  Wrong industry. The wedge is a proved round sitting next to the work.
 
-Why a crypto recruiter?
-  Caroline is demand. Not the niche.
-  Thursday is her read on the product. Not a crypto pivot.
+UX and UI only?
+  Andrew floated it. We did not lock it. Caroline is demand, not a designer niche.
 
-Where is the agent?
-  Barney's. Not in this build yet.
-  Tomorrow it lands in the prototype.
+Why so slow / cofounders?
+  Landing, agents, and conversations were three threads. Tomorrow they become one build.
+  Generating UI is not the bottleneck. Trust is.
 
-Prompto?
-  Parked. Still.
+Signals insights? What companies test?
+  Parked. That would be the leak people were afraid of.
 
 Is it live?
-  Prototype. Real loop.
-  LinkedIn tomorrow. Then people we can send.
+  Accounts persist on this device. Email proof is still a prototype loop.
+  LinkedIn tomorrow so we can send a URL.
 
-Score? Marketplace?
-  No score.
-  Company. Stage. Mail verified.
-  Listings wait on a proved loop.
+Prompto?
+  Parked.
 
 
 --------------------------------
 PASTE INTO EF
 --------------------------------
 
-Day 4: landing is one sentence now.
-Prove how far you got. Work first, original
-email, next company starts later. Rewrote
-the page after Andrew Forbes (product
-designer, Figma) sat with Barney's mock
-agent and this prototype. His note:
-cohesion, talk to the user not to us.
-Wedge to UX/UI designers is open, not
-decided. Caroline Kerr (recruiter, crypto)
-replied — Thursday. Tomorrow: David in
-meetings, ask Andrew for a call, merge
-Barney's agents into the prototype, put
-Elestarr on LinkedIn.
+Day 4: landing is one sentence — prove how far
+you got. Rewrote after Andrew Forbes (Figma)
+reviewed Barney's mock and this prototype.
+Trust answer: we attest company + farthest
+round from one original email. Result and
+process stay private. Not a creator play, not
+a dump of what companies test. Eye off the
+first frame. Create account ships. Tomorrow:
+David in meetings, Andrew call, merge Barney's
+agents, LinkedIn. Thursday: Caroline Kerr
+(recruiter) — would hiring use this fact.

@@ -6,8 +6,6 @@ import poster from "../assets/elestarr-line-poster.png"
 import wallMockup from "../assets/elestarr-wall-mockup.jpg"
 import forwardEmail from "../assets/elestarr-forward-email.png"
 
-const PILLARS = ["Work", "Interviews", "Wall", "Desk", "Profile"]
-
 const TODAY = ["Apply", "Technical", "Panel", "Final", "Gone"]
 const KEPT = ["Apply", "Technical", "Panel", "Final", "Kept"]
 
@@ -46,42 +44,6 @@ const HOW_STEPS: [string, string, string][] = [
 
 function prefersReduce() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
-}
-
-const HERO_PROOF = "Maya Okonkwo · Figma final · email proved"
-
-function HeroRecord({ armed = true }: { armed?: boolean }) {
-  const show = armed || prefersReduce()
-  return (
-    <div className="mt-10 min-h-[1.75rem]" aria-live="polite">
-      {show && (
-        <p
-          className="hero-record-live seal-in flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-[11px] uppercase tracking-[0.14em]"
-          style={{ color: "var(--ink-3)" }}
-        >
-          <span>{HERO_PROOF}</span>
-          <span
-            className="inline-block font-mono text-[10px] uppercase tracking-[0.16em] px-2 py-1 border"
-            style={{ color: "var(--verify)", borderColor: "var(--verify)" }}
-          >
-            Mail verified
-          </span>
-        </p>
-      )}
-      <p
-        className="hero-record-static flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-[11px] uppercase tracking-[0.14em]"
-        style={{ color: "var(--ink-3)" }}
-      >
-        <span>{HERO_PROOF}</span>
-        <span
-          className="inline-block font-mono text-[10px] uppercase tracking-[0.16em] px-2 py-1 border"
-          style={{ color: "var(--verify)", borderColor: "var(--verify)" }}
-        >
-          Mail verified
-        </span>
-      </p>
-    </div>
-  )
 }
 
 function TypeOn({
@@ -208,7 +170,7 @@ function ProcessSteps({
 
   return (
     <div ref={ref}>
-      <div className="relative h-px mb-10 md:mb-12 pointer-events-none" aria-hidden="true">
+      <div className="relative h-px mb-6 md:mb-8 pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0" style={{ background: "var(--border)" }} />
         <div
           className="absolute inset-y-0 left-0 origin-left"
@@ -250,7 +212,7 @@ function ProcessSteps({
 function ProveIt() {
   return (
     <section id="how" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
-      <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
+      <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-10 md:py-14">
         <TypeOn
           text="Forward one interview email. Not your inbox."
           className="edn-scene max-w-[18ch] mb-4"
@@ -260,7 +222,7 @@ function ProveIt() {
           <p className="text-[18px] leading-relaxed max-w-[42ch] mb-6" style={{ color: "var(--muted-foreground)" }}>
             If that email is real, your profile shows the company, how far you got, and the date. That is public. The result stays private. So do the questions and the take-home.
           </p>
-          <p className="text-[16px] leading-relaxed max-w-[42ch] mb-14" style={{ color: "var(--muted-foreground)" }}>
+          <p className="text-[16px] leading-relaxed max-w-[42ch] mb-8" style={{ color: "var(--muted-foreground)" }}>
             Do not send take-home files or NDA work. We prove the loop from the interview email, not the assignment.
           </p>
         </Reveal>
@@ -283,29 +245,6 @@ function ProveIt() {
         />
       </div>
     </section>
-  )
-}
-
-function PillarMarquee() {
-  const row = [...PILLARS, ...PILLARS, ...PILLARS, ...PILLARS]
-  return (
-    <div className="marquee border-y py-3 md:py-4" style={{ borderColor: "var(--border)" }}>
-      <div className="marquee-track">
-        {row.map((w, i) => (
-          <span key={`${w}-${i}`} className="flex items-baseline gap-8 md:gap-12 pr-8 md:pr-12">
-            <span
-              className="font-display font-extralight leading-none whitespace-nowrap"
-              style={{ fontSize: "clamp(2.1rem, 4.4vw, 3.4rem)", color: "var(--navy)", letterSpacing: "-0.04em" }}
-            >
-              {w}
-            </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.2em]" style={{ color: "var(--ink-3)" }}>
-              {String((i % 5) + 1).padStart(2, "0")}
-            </span>
-          </span>
-        ))}
-      </div>
-    </div>
   )
 }
 
@@ -346,8 +285,8 @@ function DualLedger() {
   const idx = live ? i : TODAY.length - 1
   return (
     <section ref={ref} id="signals" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
-      <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
-        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-16 items-end mb-12">
+      <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-10 md:py-14">
+        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-10 items-end mb-8">
           <TypeOn
             text="You sat four rounds. You didn't get the job. LinkedIn shows none of it."
             className="edn-scene max-w-[16ch]"
@@ -371,7 +310,7 @@ function PosterInterlude() {
 
   return (
     <section className="border-t" style={{ borderColor: "var(--border)" }}>
-      <div ref={ref} className="max-w-[1440px] mx-auto px-5 md:px-8 py-16 md:py-24">
+      <div ref={ref} className="max-w-[1440px] mx-auto px-5 md:px-8 py-10 md:py-12">
         <figure
           className="mx-auto max-w-[640px] overflow-hidden border"
           style={{
@@ -429,7 +368,7 @@ function SignalPrinter() {
     <section id="issued" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
       <div
         ref={ref}
-        className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28 grid lg:grid-cols-[1fr_0.9fr] gap-12 lg:gap-20 items-center"
+        className="max-w-[1440px] mx-auto px-5 md:px-8 py-10 md:py-14 grid lg:grid-cols-[1fr_0.9fr] gap-8 lg:gap-12 items-center"
       >
         <div>
           <TypeOn
@@ -490,8 +429,8 @@ function ModeStage() {
 
   return (
     <section id="search" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
-      <div ref={ref} className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      <div ref={ref} className="max-w-[1440px] mx-auto px-5 md:px-8 py-10 md:py-14">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-8">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--navy)" }}>If you are hiring</p>
             <TypeOn
@@ -610,8 +549,8 @@ function BriefWrite() {
 function DeskPitch({ onOpen }: { onOpen: () => void }) {
   return (
     <section id="desk" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
-      <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
-        <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-20 items-end mb-14">
+      <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-10 md:py-14">
+        <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-8 lg:gap-12 items-end mb-8">
           <TypeOn
             text="Skip interviews they already did."
             className="edn-scene max-w-[14ch]"
@@ -627,7 +566,7 @@ function DeskPitch({ onOpen }: { onOpen: () => void }) {
           </Reveal>
         </div>
 
-        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-px mb-16" style={{ background: "var(--border)" }}>
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-px mb-8" style={{ background: "var(--border)" }}>
           <Reveal className="p-7 md:p-10" style={{ background: "var(--background)" }}>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-6" style={{ color: "var(--ink-3)" }}>Why this person</p>
             <p className="edn-lg mb-3" style={{ color: "var(--navy)" }}>Maya Okonkwo</p>
@@ -658,7 +597,7 @@ function Bridge() {
   const [ref, on] = useInView<HTMLElement>(0.38)
   return (
     <section ref={ref} id="you" className="scroll-mt-24 border-t" style={{ borderColor: "var(--border)" }}>
-      <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
+      <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-10 md:py-14">
         <TypeOn
           text="You are not hiring a Stripe employee. You are finding the person Stripe already took to final."
           className="edn-scene max-w-[18ch] mb-6"
@@ -669,7 +608,7 @@ function Bridge() {
             The work is on their profile. The proved interview is next to it. The next company can start later.
           </p>
         </Reveal>
-        <div className="mt-16 grid md:grid-cols-[1fr_auto_1fr] gap-8 md:gap-6 items-center">
+        <div className="mt-8 grid md:grid-cols-[1fr_auto_1fr] gap-8 md:gap-6 items-center">
           <div className="border p-7 md:p-9" style={{ borderColor: "var(--border-2)" }}>
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] mb-4" style={{ color: "var(--ink-3)" }}>If you are a candidate</p>
             <p className="edn-lg mb-3" style={{ color: "var(--navy)" }}>Those weeks still count.</p>
@@ -717,7 +656,6 @@ function Bridge() {
 export default function Landing() {
   const { navigate, signedIn, setWallView, setIntent, dark, toggleDark } = useRouter()
   const [solidNav, setSolidNav] = useState(false)
-  const [issued, setIssued] = useState(() => prefersReduce())
   const [pull, setPull] = useState(0)
 
   useEffect(() => {
@@ -764,7 +702,7 @@ export default function Landing() {
   }
 
   return (
-    <div className="relative min-h-[100dvh] overflow-x-hidden" style={{ background: "color-mix(in srgb, var(--background) 62%, transparent)", color: "var(--foreground)" }}>
+    <div className="relative min-h-[100dvh] overflow-x-hidden" style={{ background: "color-mix(in srgb, var(--background) 28%, transparent)", color: "var(--foreground)" }}>
       <nav
         className="sticky top-0 z-40 border-b"
         style={{
@@ -810,7 +748,7 @@ export default function Landing() {
         </div>
       </nav>
 
-      <section id="enter" className="min-h-[calc(100dvh-4rem)] flex flex-col justify-center py-8 md:py-10 text-center">
+      <section id="enter" className="min-h-[calc(100dvh-4rem)] flex flex-col justify-center py-8 text-center">
         <div
           className="hero-type-pull px-4 md:px-6"
           style={{
@@ -819,18 +757,10 @@ export default function Landing() {
             clipPath: pull > 0.02 ? `inset(0 0 ${pull * 68}% 0)` : undefined,
           } as CSSProperties}
         >
-          <HeroType onDone={() => setIssued(true)} />
+          <HeroType />
         </div>
         <div className="hero-center max-w-[1440px] mx-auto px-5 md:px-8">
-        <div
-          className="rule-draw mx-auto mt-8 h-px w-16"
-          style={{ background: "var(--navy)", opacity: issued ? 1 : 0.35 }}
-          aria-hidden="true"
-        />
-        <div
-          className="hero-actions mt-8 md:mt-10 flex flex-wrap items-center justify-center gap-3 md:gap-4"
-          data-ready={issued ? "" : undefined}
-        >
+        <div className="hero-actions mt-6 flex flex-wrap items-center justify-center gap-3" data-ready="">
           <button
             type="button"
             onClick={goList}
@@ -846,25 +776,18 @@ export default function Landing() {
             I'm hiring
           </button>
         </div>
-        <HeroRecord armed={issued} />
         </div>
       </section>
 
-      <PillarMarquee />
-
-      <section id="work" className="scroll-mt-24 border-b" style={{ borderColor: "var(--border)" }}>
-        <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-28">
-          <TypeOn
-            text="The work is first. The proved interview is next to it."
-            className="edn-scene mb-6 max-w-[18ch]"
-            style={{ color: "var(--navy)" }}
-          />
-          <Reveal>
-            <p className="text-[18px] leading-relaxed max-w-[42ch] mb-12 md:mb-14" style={{ color: "var(--muted-foreground)" }}>
-              Maya's work is on the wall. Next to it: Figma, final, proved from the original email. That is what employers see.
-            </p>
-          </Reveal>
+      <section id="work" className="scroll-mt-20 border-t" style={{ borderColor: "var(--border)" }}>
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-12 md:py-16">
           <ProductChrome />
+          <p
+            className="mt-5 text-center font-mono text-[11px] uppercase tracking-[0.14em]"
+            style={{ color: "var(--ink-3)" }}
+          >
+            Maya Okonkwo · Figma final · Mail verified
+          </p>
         </div>
       </section>
 
@@ -877,7 +800,7 @@ export default function Landing() {
       <Bridge />
 
       <section className="border-t" style={{ borderColor: "var(--navy)", background: "var(--navy)", color: "var(--primary-foreground)" }}>
-        <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-20 md:py-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-8 py-12 md:py-14 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <h2
               className="font-display font-normal max-w-[12ch]"
