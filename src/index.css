@@ -1041,6 +1041,19 @@ main#main {
   padding: 16px 18px;
 }
 
+.manifesto .site-section {
+  padding-top: 28px;
+  padding-bottom: 28px;
+}
+
+.manifesto-belief .type-section {
+  margin-bottom: 0.45rem;
+}
+
+.manifesto-belief .type-lede {
+  margin-bottom: 0;
+}
+
 .info-block {
   font-family: var(--font-serif);
   font-size: var(--t-display-3);

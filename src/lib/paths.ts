@@ -20,6 +20,7 @@ export type SitePage =
   | "publish"
   | "access"
   | "walkthrough"
+  | "manifesto"
   | "notfound"
 
 const TABLE: Record<SitePage, string> = {
@@ -44,6 +45,7 @@ const TABLE: Record<SitePage, string> = {
   publish: "/what-we-publish",
   access: "/access",
   walkthrough: "/book-walkthrough",
+  manifesto: "/manifesto",
   notfound: "/404",
 }
 

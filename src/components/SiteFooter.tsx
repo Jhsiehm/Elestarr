@@ -52,6 +52,7 @@ const COLS: { title: string; links: { label: string; page: SitePage; hash?: stri
     links: [
       { label: "How verification works", page: "verification" },
       { label: "The Wall", page: "landing", hash: "wall" },
+      { label: "Manifesto", page: "manifesto" },
       { label: "Pricing", page: "pricing" },
     ],
   },

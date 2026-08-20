@@ -32,7 +32,13 @@ export default function Hiring() {
               Create a hiring account
             </button>
           </div>
-          <p className="type-caption">You get the wall and a skip note on every proved round, today.</p>
+          <p className="type-caption">
+            You get the wall and a skip note on every proved round, today.{" "}
+            <button type="button" className="linkish" onClick={() => navigate("manifesto")}>
+              What we believe
+            </button>
+            .
+          </p>
         </div>
       </section>
 

@@ -2,6 +2,7 @@ import { RouterProvider, useRouter, type Page } from "./router"
 import Landing from "./pages/Landing"
 import Candidates from "./pages/Candidates"
 import Hiring from "./pages/Hiring"
+import Manifesto from "./pages/Manifesto"
 import Signup from "./pages/Signup"
 import Board from "./pages/Board"
 import Profile from "./pages/Profile"
@@ -33,6 +34,7 @@ function Pages() {
   if (page === "landing") return <Landing />
   if (page === "candidates") return <Candidates />
   if (page === "hiring") return <Hiring />
+  if (page === "manifesto") return <Manifesto />
   if (page === "signup") return <Signup />
   if (page === "onboard") return <Onboard />
   if (page === "board") return <Board />

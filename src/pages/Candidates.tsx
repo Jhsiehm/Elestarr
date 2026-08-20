@@ -82,7 +82,13 @@ export default function Candidates() {
       {/* 05 CLOSE - candidates. One CTA. */}
       <section className="site-section">
         <h2 className="type-section">Those weeks still count.</h2>
-        <p className="type-lede">Create a candidate account. Prove one round today. Your profile shows the company and the round. Not the result.</p>
+        <p className="type-lede">
+            Create a candidate account. Prove one round today. Your profile shows the company and the round. Not the result.{" "}
+            <button type="button" className="linkish" onClick={() => navigate("manifesto")}>
+              What we believe
+            </button>
+            .
+          </p>
         <button type="button" className="btn btn-fill" onClick={prove}>
           Prove a round
         </button>
