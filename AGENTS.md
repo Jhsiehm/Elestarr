@@ -39,3 +39,9 @@ This project uses **Tailwind CSS v4** through the `@tailwindcss/vite` plugin con
 - Use double quotes for strings containing apostrophes (`"We're here to help"`), or escape them in single-quoted strings. An unescaped apostrophe in a single-quoted string breaks the build.
 - Ensure JSX tags are closed and braces are balanced.
 - Export components as default exports.
+
+## MCP servers
+
+- `.mcp.json` defines project-scoped MCP servers that Claude Code loads automatically when working in this repo.
+- **Higgsfield** (`https://mcp.higgsfield.ai/mcp`, HTTP transport) — gives Claude access to Higgsfield's AI image and video generation tools (Soul, Cinema Studio, Flux, Seedream, Kling, Veo, and others), plus browsing generation history. Useful for producing hiring-platform mockup assets, listing artwork, or promotional imagery/video on request.
+- First use triggers a browser OAuth prompt to authorize a Higgsfield account. An active paid Higgsfield subscription is required to generate; connecting the server itself is free and new accounts include starter credits.
